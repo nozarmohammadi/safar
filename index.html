@@ -937,5 +937,15 @@ calcMoney();
 calcSettle();
 cUpd();
 </script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('✅ PWA ready'))
+      .catch(e => console.log('❌ SW err:', e));
+  });
+}
+</script>
 </body>
 </html>

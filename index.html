@@ -389,6 +389,12 @@ body{
           </div>
         </div>
         <button class="btn btn-primary" onclick="addItem()">افزودن به لیست</button>
+<div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)">
+  <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600">⚡ افزودن سریع (چند خط)</label>
+  <textarea id="quickAdd" placeholder="هر خط یه قلم:&#10;شرح | مقدار | مبلغ&#10;&#10;مثال:&#10;تیغه کرکره متوسط آلما | 13 متر | 55,250,000&#10;موتور ساید متوسط | 1 عدد | 29,000,000" style="width:100%;min-height:140px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;line-height:1.8;resize:vertical"></textarea>
+  <button class="btn btn-secondary" style="margin-top:10px" onclick="quickAddAll()">⚡ افزودن همه به لیست</button>
+</div>
+
       </div>
 
       <div class="card">
@@ -584,6 +590,65 @@ const fa = n => (typeof n === 'number' ? n.toLocaleString('fa-IR') : n);
     slats.appendChild(s);
   }
 })();
+
+// ===== افزودن سریع چند خط =====
+function quickAddAll(){
+  const text = document.getElementById('quickAdd').value.trim();
+  if(!text){ alert('متنی وارد کن'); return; }
+  
+  const lines = text.split('\n').filter(l => l.trim());
+  let added = 0;
+  
+  lines.forEach(line => {
+    // پشتیبانی از جداکننده‌های: | ، , -  و فاصله
+    let parts = line.split('|').map(p => p.trim());
+    if(parts.length < 2){
+      parts = line.split('،').map(p => p.trim());
+    }
+    if(parts.length < 2){
+      parts = line.split(',').map(p => p.trim());
+    }
+    
+    let desc, qty, price;
+    
+    if(parts.length >= 3){
+      desc = parts[0];
+      qty = parts[1];
+      price = parseFloat(parts[2].replace(/[^0-9]/g, '')) || 0;
+    } else if(parts.length === 2){
+      desc = parts[0];
+      qty = '—';
+      price = parseFloat(parts[1].replace(/[^0-9]/g, '')) || 0;
+    } else {
+      // یه خط، آخرین عدد = مبلغ
+      const nums = line.match(/[0-9,]+/g);
+      if(nums && nums.length > 0){
+        const last = nums[nums.length - 1];
+        price = parseFloat(last.replace(/,/g, '')) || 0;
+        desc = line.replace(last, '').trim();
+      } else {
+        desc = line;
+        price = 0;
+      }
+      qty = '—';
+    }
+    
+    if(desc && price > 0){
+      items.push({ desc, qty: qty || '—', price });
+      added++;
+    }
+  });
+  
+  localStorage.setItem('invoiceItems', JSON.stringify(items));
+  document.getElementById('quickAdd').value = '';
+  renderItems();
+  
+  if(added > 0){
+    alert('✅ ' + added + ' قلم اضافه شد');
+  } else {
+    alert('❌ هیچ قلمی اضافه نشد. فرمت رو چک کن');
+  }
+}
 
 // ===== شماره فاکتور خودکار =====
 function getNextInvoiceNum(){

@@ -391,7 +391,7 @@ body{
         <button class="btn btn-primary" onclick="addItem()">افزودن به لیست</button>
 <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)">
   <label style="display:block;font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600">⚡ افزودن سریع (چند خط)</label>
-  <textarea id="quickAdd" placeholder="هر خط یه قلم:&#10;شرح | مقدار | مبلغ&#10;&#10;مثال:&#10;تیغه کرکره متوسط آلما | 13 متر | 55,250,000&#10;موتور ساید متوسط | 1 عدد | 29,000,000" style="width:100%;min-height:140px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;line-height:1.8;resize:vertical"></textarea>
+  <textarea id="quickAdd" placeholder="هر خط یه قلم، با | جدا کن&#10;&#10;مثال:&#10;تیغه کرکره | 13 متر | 59000000&#10;موتور ساید | 1 عدد | 31000000&#10;ریل آهنی | 1 جفت | 1000000" style="width:100%;min-height:140px;padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;line-height:1.8;resize:vertical"></textarea>
   <button class="btn btn-secondary" style="margin-top:10px" onclick="quickAddAll()">⚡ افزودن همه به لیست</button>
 </div>
 
@@ -596,51 +596,30 @@ function quickAddAll(){
   const text = document.getElementById('quickAdd').value.trim();
   if(!text){ alert('متنی وارد کن'); return; }
   
-  // تبدیل اعداد فارسی به انگلیسی
-  function toEn(s){
-    const fa = '۰۱۲۳۴۵۶۷۸۹';
-    const ar = '٠١٢٣٤٥٦٧٨٩';
-    return s.replace(/[۰-۹]/g, d => fa.indexOf(d)).replace(/[٠-٩]/g, d => ar.indexOf(d));
-  }
-  
   const lines = text.split('\n').filter(l => l.trim());
   let added = 0;
+  let errors = 0;
   
   lines.forEach(line => {
     if(/جمع\s*کل|مجموع/i.test(line)) return;
     
-    // حذف کاراکترهای عجیب
-    let cleanLine = toEn(line).replace(/[\u200c\u200f\u200e]/g, '');
+    // فقط با جداکننده | کار کن
+    const parts = line.split('|').map(p => p.trim());
     
-    // پیدا کردن همه اعداد
-    const nums = cleanLine.match(/[0-9][0-9,]*/g);
-    if(!nums || nums.length === 0) return;
+    if(parts.length < 3){ errors++; return; }
     
-    // بزرگ‌ترین عدد = مبلغ
-    let price = 0, priceStr = '';
-    nums.forEach(n => {
-      const v = parseFloat(n.replace(/,/g, ''));
-      if(v > price){ price = v; priceStr = n; }
-    });
+    const desc = parts[0];
+    const qty = parts[1] || '—';
     
-    if(price === 0) return;
-    
-    // حذف مبلغ از متن
-    const lastIdx = cleanLine.lastIndexOf(priceStr);
-    let desc = cleanLine.substring(0, lastIdx).trim();
-    desc = desc.replace(/[|،,\-–—:]+$/, '').trim();
-    
-    // استخراج مقدار (داخل پرانتز آخر)
-    let qty = '—';
-    const m = desc.match(/\(([^)]+)\)\s*$/);
-    if(m){
-      qty = m[1].trim();
-      desc = desc.replace(/\([^)]+\)\s*$/, '').trim();
-    }
+    // پاک کردن کاما و تبدیل اعداد
+    let priceStr = parts[2].replace(/,/g, '').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g, '');
+    const price = parseInt(priceStr) || 0;
     
     if(desc && price > 0){
       items.push({ desc: desc, qty: qty, price: price });
       added++;
+    } else {
+      errors++;
     }
   });
   
@@ -648,7 +627,11 @@ function quickAddAll(){
   document.getElementById('quickAdd').value = '';
   renderItems();
   
-  alert(added > 0 ? '✅ ' + added + ' قلم اضافه شد' : '❌ هیچ قلمی اضافه نشد');
+  if(added > 0){
+    alert('✅ ' + added + ' قلم اضافه شد');
+  } else {
+    alert('❌ هیچ قلمی اضافه نشد\n\nفرمت درست:\nشرح | مقدار | مبلغ\n\nمثال:\nتیغه کرکره | 13 متر | 59000000');
+  }
 }
 
 // ===== شماره فاکتور خودکار =====

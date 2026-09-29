@@ -761,7 +761,7 @@ body{
           </div>
           <div class="field">
             <label>مبلغ (تومان)</label>
-            <input id="itemPrice" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="22000">
+            <input id="itemPrice" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="22000" oninput="formatPrice(this)">
           </div>
         </div>
         <button class="btn btn-primary" onclick="addItem()">افزودن به لیست</button>
@@ -1012,6 +1012,14 @@ const fa = n => (typeof n === 'number' ? n.toLocaleString('fa-IR') : n);
   }
 })();
 
+// ===== فرمت قیمت (سه‌تا سه‌تا) =====
+function formatPrice(el){
+  let v = el.value.replace(/,/g, '').replace(/[^0-9]/g, '');
+  if(v === ''){ el.value = ''; return; }
+  const num = parseInt(v, 10);
+  el.value = num.toLocaleString('en-US');
+}
+
 // ===== فاکتور =====
 let items = JSON.parse(localStorage.getItem('invoiceItems') || '[]');
 const today = new Date().toLocaleDateString('fa-IR');
@@ -1020,7 +1028,7 @@ if($('invDate')) $('invDate').value = today;
 function addItem(){
   const desc = $('itemDesc').value.trim();
   const qty = $('itemQty').value.trim();
-  const price = +$('itemPrice').value || 0;
+  const price = +$('itemPrice').value.replace(/,/g, '') || 0;
   if(!desc){ alert('شرح رو وارد کن'); return; }
   if(!price){ alert('مبلغ رو وارد کن'); return; }
   items.push({ desc, qty: qty || '—', price });

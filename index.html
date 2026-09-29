@@ -761,7 +761,7 @@ body{
           </div>
           <div class="field">
             <label>مبلغ (تومان)</label>
-            <input id="itemPrice" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="22000" oninput="formatPrice(this)">
+            <input id="itemPrice" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="22000" oninput="this.value=this.value.replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+(?!\d))/g,',')">
           </div>
         </div>
         <button class="btn btn-primary" onclick="addItem()">افزودن به لیست</button>

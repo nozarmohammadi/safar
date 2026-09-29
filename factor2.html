@@ -159,18 +159,7 @@ tbody tr:nth-child(even){background:#fafbfc}
 <div class="wrap">
 
   <!-- امضا و مهر -->
-  <div class="card">
-    <h2>📤 امضا و مهر (یه بار آپلود کن)</h2>
-    <div class="grid-2">
-      <div>
-        <label>امضا</label>
-        <div class="upload-area" onclick="document.getElementById('signInput').click()">
-          <input type="file" id="signInput" accept="image/*" onchange="uploadImg(event,'sign')">
-          <div class="placeholder" id="signPlaceholder">📷 آپلود امضا</div>
-          <img id="signPreview" style="display:none">
-        </div>
-        <div class="upload-actions"><button onclick="event.stopPropagation();removeImg('sign')">🗑️ حذف</button></div>
-      </div>
+  
       <div>
         <label>مهر</label>
         <div class="upload-area" onclick="document.getElementById('stampInput').click()">
@@ -252,8 +241,7 @@ tbody tr:nth-child(even){background:#fafbfc}
     <div class="total-row"><div class="label">💰 جمع کل:</div><div class="value" id="totalValue">۰ تومان</div></div>
     <div class="letters-box"><div class="label">📝 مبلغ به حروف:</div><div class="value" id="lettersValue">—</div></div>
     <div class="note">ℹ️ این فاکتور بابت فروش و نصب کرکره برقی صادر شده است.</div>
-    <div class="signatures">
-      <div class="sign-box"><div class="sign-label">امضاء</div><img id="signInInvoice" style="display:none"><div class="sign-line"></div></div>
+    
       <div class="sign-box"><div class="sign-label">مهر</div><img id="stampInInvoice" style="display:none"><div class="sign-line"></div></div>
     </div>
     <div class="inv-footer"><div>📞 ۰۹۱۰۵۸۵۸۰۳۸</div><div>📍 صالحیه، نگارستان ۱۲</div></div>

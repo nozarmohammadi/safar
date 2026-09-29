@@ -273,12 +273,37 @@ body{
 .calc-btns button.wide{grid-column:span 2;aspect-ratio:auto;border-radius:50px}
 .calc-btns button.danger{color:#f87171;background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.02));border-color:rgba(220,38,38,0.2)}
 @media print{
-  @page{size:A4 portrait;margin:8mm}
-  body{background:#fff;color:#000;overflow:visible}
-  .screen-header,.btn,.btn-row,.field,.home-cards,.home-footer,.home h1,.home .subtitle,.shutter-anim{display:none !important}
-  .screen{position:static;transform:none !important;display:block;background:#fff}
-  .screen-body{overflow:visible;padding:0;background:#fff}
-  .card{border:1px solid #ddd;background:#fff;color:#000}
+  @page{size:A4 portrait;margin:10mm}
+  *{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}
+  html,body{background:#fff !important;color:#000 !important;overflow:visible !important;height:auto !important}
+  .app{background:#fff !important;height:auto !important;display:block !important}
+  .screen{position:static !important;transform:none !important;display:none !important;background:#fff !important;overflow:visible !important}
+  .screen.active{display:block !important}
+  #screen-invoice{display:block !important}
+  .screen-header,.back,.action-btn,.btn,.btn-row,.home-cards,.home-footer,.home h1,.home .subtitle,.shutter-anim,.screen-header *{display:none !important}
+  .screen-body{overflow:visible !important;padding:0 !important;background:#fff !important}
+  .card{background:#fff !important;border:1px solid #ccc !important;color:#000 !important;padding:12px !important;margin-bottom:10px !important}
+  .card-title{color:#000 !important;font-weight:700 !important}
+  .field label{color:#666 !important}
+  .field input,.field textarea{border:1px solid #ccc !important;background:#fff !important;color:#000 !important;padding:8px !important}
+  .item-row{border-bottom:1px solid #ddd !important;color:#000 !important}
+  .item-row .num{background:#f0f0f0 !important;color:#000 !important}
+  .item-row .desc{color:#000 !important}
+  .item-row .qty{color:#666 !important}
+  .item-row .price{color:#000 !important}
+  .item-row .del{display:none !important}
+  .result{background:#f5f5f5 !important;border:1px solid #ccc !important;color:#000 !important}
+  .result .lbl{color:#666 !important}
+  .result .val{color:#000 !important;-webkit-text-fill-color:#000 !important;background:none !important}
+  .result.highlight{background:#f5f5f5 !important;border:1px solid #000 !important}
+  .result.highlight .val{color:#000 !important;-webkit-text-fill-color:#000 !important;background:none !important}
+  #invoicePreview{display:block !important;margin:0 !important}
+  #invoicePreview .card{background:#fff !important;color:#000 !important;border:none !important;padding:0 !important}
+  #invoicePreview *{color:#000 !important;-webkit-text-fill-color:#000 !important}
+  #invoicePreview div[style*="background:#0f2942"]{background:#000 !important}
+  #invoicePreview div[style*="background:#0f2942"] *{color:#fff !important;-webkit-text-fill-color:#fff !important}
+  table{page-break-inside:avoid}
+  tr{page-break-inside:avoid}
 }
 </style>
 </head>

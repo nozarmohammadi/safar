@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ماشین‌حساب</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,sans-serif;background:#f5f6f8;padding:12px;min-height:100vh}
+.wrap{max-width:400px;margin:0 auto}
+h1{font-size:18px;color:#0f2942;margin-bottom:14px;text-align:center}
+.display{background:#0f2942;color:#fff;padding:20px;border-radius:12px;margin-bottom:10px;direction:ltr;min-height:100px;display:flex;flex-direction:column;justify-content:center;word-wrap:break-word}
+.display .expr{font-size:14px;color:#94a3b8;min-height:20px;margin-bottom:6px}
+.display .result{font-size:32px;color:#c9a961;font-weight:800}
+.btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.btns button{padding:20px 8px;font-size:20px;font-weight:700;background:#fff;color:#0f2942;border:1px solid #d8dce3;border-radius:12px;cursor:pointer;font-family:inherit}
+.btns button:active{transform:scale(0.95);background:#e5e7eb}
+.btns button.op{background:#0f2942;color:#fff;border-color:#0f2942}
+.btns button.op:active{background:#c9a961;color:#0f2942}
+.btns button.eq{background:#c9a961;color:#0f2942;border-color:#c9a961}
+.btns button.wide{grid-column:span 2}
+.btns button.danger{background:#fee2e2;color:#dc2626;border-color:#fca5a5}
+.history{margin-top:14px;background:#fff;border-radius:12px;padding:14px;border:1px solid #d8dce3}
+.history h2{font-size:14px;color:#0f2942;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #c9a961}
+.history ul{list-style:none;max-height:200px;overflow-y:auto}
+.history li{padding:8px 10px;background:#fafbfc;border-radius:8px;margin-bottom:6px;font-size:12px;display:flex;justify-content:space-between;color:#6b7280}
+.history li b{color:#0f2942}
+.history button{margin-top:8px;padding:8px 14px;background:#e5e7eb;color:#333;border:none;border-radius:8px;font-family:inherit;font-size:12px;cursor:pointer;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🧮 ماشین‌حساب</h1>
+<div class="display">
+<div class="expr" id="expr"></div>
+<div class="result" id="res">0</div>
+</div>
+<div class="btns">
+<button class="danger" onclick="clr()">C</button>
+<button class="op" onclick="back()">⌫</button>
+<button class="op" onclick="op('%')">%</button>
+<button class="op" onclick="op('÷')">÷</button>
+<button onclick="num('7')">7</button>
+<button onclick="num('8')">8</button>
+<button onclick="num('9')">9</button>
+<button class="op" onclick="op('×')">×</button>
+<button onclick="num('4')">4</button>
+<button onclick="num('5')">5</button>
+<button onclick="num('6')">6</button>
+<button class="op" onclick="op('-')">−</button>
+<button onclick="num('1')">1</button>
+<button onclick="num('2')">2</button>
+<button onclick="num('3')">3</button>
+<button class="op" onclick="op('+')">+</button>
+<button class="wide" onclick="num('0')">0</button>
+<button onclick="num('.')">.</button>
+<button class="eq" onclick="eq()">=</button>
+</div>
+<div class="history">
+<h2>📜 تاریخچه</h2>
+<ul id="hist"><li><span>هنوز محاسبه‌ای نیست</span></li></ul>
+<button onclick="clearHist()">پاک کردن تاریخچه</button>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let cur='0', prev=null, operator=null, expr='';
+let history=JSON.parse(localStorage.getItem('calcHist')||'[]');
+
+function upd(){
+$('res').textContent=cur;
+$('expr').textContent=expr;
+}
+
+function num(d){
+if(cur==='0'&&d!=='.')cur=d;
+else if(d==='.'&&cur.includes('.'))return;
+else cur+=d;
+upd();
+}
+
+function op(o){
+if(operator&&prev!==null)eq();
+prev=parseFloat(cur);
+operator=o;
+expr=cur+' '+o;
+cur='0';
+upd();
+}
+
+function eq(){
+if(operator===null||prev===null)return;
+const a=prev,b=parseFloat(cur);
+let r=0;
+if(operator==='+')r=a+b;
+else if(operator==='-')r=a-b;
+else if(operator==='×')r=a*b;
+else if(operator==='÷')r=b===0?'خطا':a/b;
+else if(operator==='%')r=a*b/100;
+if(r==='خطا'){cur='خطا';}
+else{cur=String(Math.round(r*1000000)/1000000);}
+const line=prev+' '+operator+' '+b+' = '+cur;
+history.unshift({text:line,time:new Date().toLocaleTimeString('fa-IR')});
+if(history.length>20)history.pop();
+localStorage.setItem('calcHist',JSON.stringify(history));
+expr=line.split(' = ')[0]+' =';
+prev=null;operator=null;
+upd();
+renderHist();
+}
+
+function clr(){cur='0';prev=null;operator=null;expr='';upd();}
+function back(){if(cur.length>1)cur=cur.slice(0,-1);else cur='0';upd();}
+
+function renderHist(){
+if(history.length===0){$('hist').innerHTML='<li><span>هنوز محاسبه‌ای نیست</span></li>';return;}
+$('hist').innerHTML=history.map(h=>'<li><span>'+h.text+'</span><span style="font-size:10px;color:#bbb">'+h.time+'</span></li>').join('');
+}
+
+function clearHist(){
+if(!confirm('پاک بشه؟'))return;
+history=[];
+localStorage.removeItem('calcHist');
+renderHist();
+}
+
+renderHist();
+upd();
+</script>
+</body>
+</html>

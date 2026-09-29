@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>کارت ویزیت - نوذر محمدی</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;
+  background:#0a1628;
+  color:#fff;
+  min-height:100vh;
+  padding:70px 14px 30px;
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(circle at 20% 10%,rgba(201,169,97,0.12),transparent 45%),radial-gradient(circle at 80% 90%,rgba(59,130,246,0.08),transparent 45%);
+  pointer-events:none;z-index:0;
+}
+.wrap{max-width:480px;width:100%;position:relative;z-index:1}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,22,40,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,169,97,0.2);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.topbar a{color:#c9a961;text-decoration:none;font-size:22px;padding:4px;font-weight:300}
+.topbar .title{color:#fff;font-size:14px;font-weight:700;flex:1}
+.topbar .pwa-btn{background:linear-gradient(135deg,#c9a961,#a88a45);color:#0a1628;border:none;padding:7px 12px;border-radius:8px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer}
+
+.hint-box{background:rgba(201,169,97,0.08);border:1px solid rgba(201,169,97,0.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:11px;color:#7a8fa8;text-align:center;line-height:1.7}
+.hint-box b{color:#c9a961}
+
+/* ===== کارت ویزیت ===== */
+.card-wrapper{margin-bottom:20px;perspective:1200px}
+
+.biz-card{
+  width:100%;
+  aspect-ratio:1.6/1;
+  background:linear-gradient(135deg,#0f2942 0%,#1a3a5c 50%,#0a1628 100%);
+  border-radius:18px;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(201,169,97,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  z-index:1;
+}
+
+/* ⭐ برگ سبز بزرگ کم‌رنگ - کل کارت رو می‌گیره */
+.leaf-bg{
+  position:absolute;
+  top:-20%;
+  right:-25%;
+  width:140%;
+  height:140%;
+  z-index:0;
+  opacity:0.13;
+  pointer-events:none;
+  animation:leafFloat 8s ease-in-out infinite;
+}
+@keyframes leafFloat{
+  0%,100%{transform:rotate(-8deg) scale(1);opacity:0.13}
+  50%{transform:rotate(-4deg) scale(1.05);opacity:0.18}
+}
+
+/* گرادیانت طلایی */
+.gold-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 80% 20%,rgba(201,169,97,0.25) 0%,transparent 40%),
+    radial-gradient(circle at 10% 90%,rgba(59,130,246,0.15) 0%,transparent 35%);
+  z-index:0;
+  pointer-events:none;
+}
+
+/* خط طلایی بالا */
+.biz-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;
+  width:100%;height:4px;
+  background:linear-gradient(90deg,transparent 0%,#c9a961 20%,#e5c97a 50%,#c9a961 80%,transparent 100%);
+  z-index:2;
+}
+
+/* ===== هدر: لوگو + عکس پروفایل ===== */
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  position:relative;
+  z-index:2;
+  gap:10px;
+}
+
+.brand-block{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  flex:1;
+}
+.brand-name{
+  font-size:16px;
+  font-weight:800;
+  background:linear-gradient(135deg,#e5c97a,#c9a961);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:2px;
+  line-height:1.2;
+}
+.brand-sub{
+  font-size:9px;
+  color:#7a8fa8;
+  letter-spacing:4px;
+  font-weight:500;
+}
+.brand-line{
+  width:36px;height:2px;
+  background:linear-gradient(90deg,#c9a961,transparent);
+  border-radius:2px;
+  margin-top:4px;
+}
+
+/* ⭐ عکس دایره‌ای */
+.avatar-circle{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#1a3a5c,#0a1628);
+  border:2px solid #c9a961;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  flex-shrink:0;
+  box-shadow:
+    0 0 0 3px rgba(201,169,97,0.15),
+    0 4px 16px rgba(201,169,97,0.3);
+  overflow:hidden;
+}
+.avatar-circle::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(201,169,97,0.2),transparent 60%);
+  z-index:1;
+}
+.avatar-initial{
+  font-size:32px;
+  font-weight:800;
+  background:linear-gradient(135deg,#e5c97a,#c9a961);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  z-index:2;
+  letter-spacing:-1px;
+  text-shadow:0 2px 8px rgba(201,169,97,0.4);
+}
+.avatar-ring{
+  position:absolute;
+  inset:-6px;
+  border:1px dashed rgba(201,169,97,0.4);
+  border-radius:50%;
+  animation:rotateSlow 20s linear infinite;
+}
+@keyframes rotateSlow{
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
+}
+
+/* ===== پایین: اطلاعات ===== */
+.card-bottom{
+  position:relative;
+  z-index:2;
+}
+.name-block{
+  margin-bottom:14px;
+}
+.person-name{
+  font-size:22px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:-0.3px;
+  margin-bottom:4px;
+  line-height:1.2;
+}
+.person-title{
+  font-size:11px;
+  color:#c9a961;
+  font-weight:600;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+/* خط جداکننده طلایی */
+.gold-divider{
+  width:100%;
+  height:1px;
+  background:linear-gradient(90deg,#c9a961 0%,rgba(201,169,97,0.3) 40%,transparent 100%);
+  margin-bottom:12px;
+  position:relative;
+}
+.gold-divider::before{
+  content:'';
+  position:absolute;
+  right:0;top:-2px;
+  width:5px;height:5px;
+  background:#c9a961;
+  border-radius:50%;
+  box-shadow:0 0 8px rgba(201,169,97,0.8);
+}
+
+/* ===== اطلاعات تماس ===== */
+.contacts{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.contact-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:11.5px;
+  color:#b8c4d4;
+  direction:ltr;
+}
+.contact-row .ico{
+  width:22px;
+  height:22px;
+  border-radius:6px;
+  background:rgba(201,169,97,0.1);
+  border:1px solid rgba(201,169,97,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  flex-shrink:0;
+}
+.contact-row .val{
+  font-weight:500;
+  letter-spacing:0.5px;
+  direction:ltr;
+}
+.contact-row .val.fa{
+  direction:rtl;
+  letter-spacing:0;
+  font-size:12px;
+}
+
+/* نقطه طلایی پایین */
+.card-dot{
+  position:absolute;
+  bottom:14px;left:14px;
+  width:6px;height:6px;
+  background:#c9a961;
+  border-radius:50%;
+  box-shadow:0 0 12px rgba(201,169,97,0.7);
+  z-index:2;
+  animation:dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse{
+  0%,100%{opacity:0.6;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.3)}
+}
+
+/* ===== پشت کارت ===== */
+.back-card{
+  display:none;
+  width:100%;
+  aspect-ratio:1.6/1;
+  background:linear-gradient(135deg,#0f2942 0%,#1a3a5c 50%,#0a1628 100%);
+  border-radius:18px;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(201,169,97,0.25);
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:12px;
+}
+.back-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;width:100%;height:4px;
+  background:linear-gradient(90deg,transparent 0%,#c9a961 20%,#e5c97a 50%,#c9a961 80%,transparent 100%);
+}
+.back-brand{
+  font-size:32px;
+  font-weight:800;
+  background:linear-gradient(135deg,#e5c97a,#c9a961);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:6px;
+  z-index:2;
+}
+.back-sub{
+  font-size:10px;
+  color:#c9a961;
+  letter-spacing:8px;
+  font-weight:600;
+  z-index:2;
+}
+.back-divider{
+  width:60px;height:2px;
+  background:linear-gradient(90deg,transparent,#c9a961,transparent);
+  border-radius:2px;
+  z-index:2;
+}
+.back-services{
+  font-size:10px;
+  color:#7a8fa8;
+  letter-spacing:3px;
+  z-index:2;
+}
+.back-leaf{
+  position:absolute;
+  top:-20%;right:-25%;
+  width:140%;height:140%;
+  opacity:0.13;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ===== دکمه‌ها ===== */
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.action-btn{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  color:#fff;
+  padding:14px 12px;
+  border-radius:12px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  transition:all 0.15s;
+}
+.action-btn .ico{font-size:22px}
+.action-btn:active{transform:scale(0.97);background:rgba(255,255,255,0.1)}
+.action-btn.gold{background:linear-gradient(135deg,#c9a961,#a88a45);color:#0a1628;border-color:transparent}
+.action-btn.gold:active{background:linear-gradient(135deg,#a88a45,#8b7340)}
+
+/* ===== چاپ ===== */
+@media print {
+  @page{size:85mm 55mm;margin:0}
+  body{background:#fff;padding:0;display:block;min-height:auto}
+  body::before{display:none}
+  .topbar,.hint-box,.actions{display:none !important}
+  .wrap{max-width:100%;padding:0}
+  .biz-card,.back-card{
+    width:85mm;height:55mm;
+    border-radius:0;
+    box-shadow:none;
+    page-break-after:always;
+  }
+  .back-card{display:flex !important}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html">‹</a>
+  <div class="title">🎴 کارت ویزیت</div>
+  <button class="pwa-btn" onclick="installApp()">📲 نصب</button>
+</div>
+
+<div class="wrap">
+
+  <div class="hint-box">
+    🎴 کارت ویزیت <b>نوذر محمدی</b> — برای دانلود یا چاپ، دکمه‌های پایین
+  </div>
+
+  <div class="card-wrapper">
+
+    <!-- جلو کارت -->
+    <div class="biz-card" id="bizCard">
+
+      <!-- ⭐ برگ سبز بزرگ -->
+      <svg class="leaf-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100,20 Q140,20 160,50 Q180,80 160,120 Q140,160 100,180 Q60,160 40,120 Q20,80 40,50 Q60,20 100,20 Z" fill="#4ade80"/>
+        <path d="M100,20 Q100,100 100,180" stroke="#22c55e" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M100,60 Q80,55 70,70 M100,60 Q120,55 130,70" stroke="#22c55e" stroke-width="0.6" fill="none" opacity="0.5"/>
+        <path d="M100,100 Q75,95 65,115 M100,100 Q125,95 135,115" stroke="#22c55e" stroke-width="0.6" fill="none" opacity="0.5"/>
+        <path d="M100,140 Q80,135 70,155 M100,140 Q120,135 130,155" stroke="#22c55e" stroke-width="0.6" fill="none" opacity="0.5"/>
+      </svg>
+
+      <!-- گرادیانت طلایی -->
+      <div class="gold-overlay"></div>
+
+      <!-- هدر -->
+      <div class="card-top">
+
+        <!-- برند -->
+        <div class="brand-block">
+          <div class="brand-name">NEMO</div>
+          <div class="brand-sub">GROUP</div>
+          <div class="brand-line"></div>
+        </div>
+
+        <!-- ⭐ عکس دایره‌ای -->
+        <div class="avatar-circle">
+          <div class="avatar-ring"></div>
+          <div class="avatar-initial">N</div>
+        </div>
+
+      </div>
+
+      <!-- پایین: اطلاعات -->
+      <div class="card-bottom">
+
+        <div class="name-block">
+          <div class="person-name">نوذر محمدی</div>
+          <div class="person-title">مدیر</div>
+        </div>
+
+        <div class="gold-divider"></div>
+
+        <div class="contacts">
+          <div class="contact-row">
+            <div class="ico">📞</div>
+            <div class="val">0919 830 10015</div>
+          </div>
+          <div class="contact-row">
+            <div class="ico">📍</div>
+            <div class="val fa">تهران</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="card-dot"></div>
+    </div>
+
+    <!-- پشت کارت -->
+    <div class="back-card" id="backCard">
+      <svg class="back-leaf" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100,20 Q140,20 160,50 Q180,80 160,120 Q140,160 100,180 Q60,160 40,120 Q20,80 40,50 Q60,20 100,20 Z" fill="#4ade80"/>
+        <path d="M100,20 Q100,100 100,180" stroke="#22c55e" stroke-width="0.8" fill="none" opacity="0.6"/>
+      </svg>
+
+      <div class="back-brand">NEMO</div>
+      <div class="back-divider"></div>
+      <div class="back-sub">GROUP</div>
+      <div class="back-services">خدمات • مشاوره • مدیریت</div>
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <button class="action-btn gold" onclick="window.print()">
+      <span class="ico">🖨️</span>
+      <span>چاپ / PDF</span>
+    </button>
+    <button class="action-btn" onclick="downloadPNG()">
+      <span class="ico">🖼️</span>
+      <span>دانلود تصویر</span>
+    </button>
+    <button class="action-btn" onclick="showBack()">
+      <span class="ico">🔄</span>
+      <span>نمایش پشت</span>
+    </button>
+    <button class="action-btn" onclick="shareCard()">
+      <span class="ico">📤</span>
+      <span>اشتراک</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+let showingBack = false;
+function showBack(){
+  showingBack = !showingBack;
+  if(showingBack){
+    $('bizCard').style.display='none';
+    $('backCard').style.display='flex';
+  } else {
+    $('bizCard').style.display='flex';
+    $('backCard').style.display='none';
+  }
+}
+
+function downloadPNG(){
+  const card = showingBack ? $('backCard') : $('bizCard');
+  const btn = event.target.closest('button');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<span class="ico">⏳</span><span>صبر کن...</span>';
+
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+  script.onload = () => {
+    html2canvas(card, {
+      backgroundColor: '#0f2942',
+      scale: 4,
+      useCORS: true,
+      logging: false
+    }).then(canvas => {
+      canvas.toBlob(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'nemo-card-' + (showingBack ? 'back' : 'front') + '.png';
+        a.click();
+        URL.revokeObjectURL(url);
+        btn.innerHTML = originalText;
+      });
+    }).catch(() => {
+      alert('خطا در دانلود');
+      btn.innerHTML = originalText;
+    });
+  };
+  script.onerror = () => {
+    alert('اینترنت لازمه');
+    btn.innerHTML = originalText;
+  };
+  document.head.appendChild(script);
+}
+
+function shareCard(){
+  if(navigator.share){
+    navigator.share({
+      title: 'کارت ویزیت نوذر محمدی',
+      text: 'نوذر محمدی — مدیر NEMO\n📞 ۰۹۱۹۸۳۰۱۰۰۱۵\n📍 تهران'
+    });
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    alert('لینک کپی شد!');
+  }
+}
+
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;});
+function installApp(){
+  if(!deferredPrompt){alert('از منوی Chrome: Add to Home screen');return;}
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});
+}
+</script>
+</body>
+</html>

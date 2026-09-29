@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقسیم درآمد</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,sans-serif;background:#f5f6f8;color:#1a1d21;font-size:14px;padding:12px;line-height:1.6}
+.wrap{max-width:600px;margin:0 auto}
+h1{font-size:18px;color:#0f2942;margin-bottom:14px;text-align:center}
+.box{background:#fff;border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #d8dce3}
+.box h2{font-size:14px;color:#0f2942;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #c9a961}
+label{font-size:12px;color:#6b7280;display:block;margin-bottom:4px;margin-top:8px}
+input{width:100%;padding:10px;border:1px solid #d8dce3;border-radius:8px;font-family:inherit;font-size:14px;background:#fafafa}
+input:focus{outline:none;border-color:#c9a961;background:#fff}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.person{background:#fff;border:2px solid #d8dce3;border-radius:10px;padding:12px;text-align:center}
+.person.p1{border-color:#3b82f6}
+.person.p2{border-color:#16a34a}
+.person.p3{border-color:#f59e0b}
+.person .name{font-size:13px;font-weight:700;color:#0f2942;margin-bottom:6px}
+.person .result{font-size:16px;font-weight:800;padding:8px;border-radius:6px;margin-top:6px;background:#f1f5f9;color:#6b7280}
+.person .result.green{background:#dcfce7;color:#16a34a}
+.summary{background:#0f2942;color:#fff;border-radius:10px;padding:14px;margin-bottom:12px}
+.summary .row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.summary .row:last-child{border-bottom:none;padding-top:12px;margin-top:6px;border-top:2px solid #c9a961;font-size:17px;font-weight:800;color:#c9a961}
+.summary .value{direction:ltr;font-weight:700}
+.hint{font-size:11px;color:#999;margin-top:4px}
+.settle-line{display:flex;justify-content:space-between;align-items:center;padding:10px;background:#f0fdf4;border-radius:8px;margin-bottom:6px;font-size:13px}
+.settle-line b{color:#16a34a;font-size:15px}
+.settle-line .arrow{color:#c9a961;font-weight:800;font-size:18px}
+.empty{text-align:center;padding:20px;color:#999;font-size:13px}
+.settle-result{background:#fff;border-radius:10px;padding:14px;border:2px solid #16a34a;margin-top:12px}
+.settle-result h3{font-size:14px;color:#16a34a;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #dcfce7}
+hr{margin:14px 0;border:none;border-top:1px dashed #d8dce3}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>💰 تقسیم درآمد و تسویه</h1>
+
+<div class="box">
+<h2>💵 درآمد و هزینه‌ها</h2>
+<label>درآمد کل (تومان)</label>
+<input id="income" type="number" placeholder="100000000" oninput="calc()">
+<label>هزینه مواد و مصالح</label>
+<input id="c1" type="number" placeholder="30000000" oninput="calc()">
+<label>هزینه کرایه / بنزین</label>
+<input id="c2" type="number" placeholder="5000000" oninput="calc()">
+<label>سایر هزینه‌ها</label>
+<input id="c3" type="number" placeholder="2000000" oninput="calc()">
+</div>
+
+<div class="box">
+<h2>⚙️ درصد سهم هر نفر</h2>
+<div class="grid3">
+<div><label>همکار ۱</label><input id="sh1" type="number" value="33" oninput="calc()"></div>
+<div><label>همکار ۲</label><input id="sh2" type="number" value="33" oninput="calc()"></div>
+<div><label>همکار ۳</label><input id="sh3" type="number" value="34" oninput="calc()"></div>
+</div>
+<p class="hint">جمع درصدها: <b id="sumSh">۱۰۰</b>%</p>
+</div>
+
+<div class="summary">
+<div class="row"><span>درآمد کل</span><span class="value" id="sIncome">۰</span></div>
+<div class="row"><span>جمع هزینه‌ها</span><span class="value" id="sCosts">۰</span></div>
+<div class="row"><span>سود خالص</span><span class="value" id="sProfit">۰</span></div>
+</div>
+
+<div class="grid3">
+<div class="person p1"><div class="name">👤 همکار ۱</div><div class="result" id="r1">۰</div></div>
+<div class="person p2"><div class="name">👤 همکار ۲</div><div class="result" id="r2">۰</div></div>
+<div class="person p3"><div class="name">👤 همکار ۳</div><div class="result" id="r3">۰</div></div>
+</div>
+
+<div class="box" style="margin-top:14px">
+<h2>⚖️ تسویه نهایی (کی به کی چقدر بدهکاره)</h2>
+<p class="hint">هر کی چقدر آورده، چقدر برداشته</p>
+
+<label>اسم همکار ۱</label>
+<input id="n1" placeholder="علی">
+<div class="grid2">
+<div><label>آورده</label><input id="p1a" type="number" placeholder="0" oninput="calc()"></div>
+<div><label>برداشته</label><input id="p1b" type="number" placeholder="0" oninput="calc()"></div>
+</div>
+<hr>
+<label>اسم همکار ۲</label>
+<input id="n2" placeholder="رضا">
+<div class="grid2">
+<div><label>آورده</label><input id="p2a" type="number" placeholder="0" oninput="calc()"></div>
+<div><label>برداشته</label><input id="p2b" type="number" placeholder="0" oninput="calc()"></div>
+</div>
+<hr>
+<label>اسم همکار ۳</label>
+<input id="n3" placeholder="سارا">
+<div class="grid2">
+<div><label>آورده</label><input id="p3a" type="number" placeholder="0" oninput="calc()"></div>
+<div><label>برداشته</label><input id="p3b" type="number" placeholder="0" oninput="calc()"></div>
+</div>
+</div>
+
+<div class="settle-result">
+<h3>💸 تسویه نهایی</h3>
+<div id="settleLines"><div class="empty">اطلاعات رو پر کن</div></div>
+</div>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fa=n=>n.toLocaleString('fa-IR');
+
+function calc(){
+const inc=+$('income').value||0;
+const costs=(+$('c1').value||0)+(+$('c2').value||0)+(+$('c3').value||0);
+const profit=inc-costs;
+const sh1=+$('sh1').value||0;
+const sh2=+$('sh2').value||0;
+const sh3=+$('sh3').value||0;
+$('sumSh').textContent=fa(sh1+sh2+sh3);
+$('sIncome').textContent=fa(inc)+' تومان';
+$('sCosts').textContent=fa(costs)+' تومان';
+$('sProfit').textContent=fa(profit)+' تومان';
+
+const r1=Math.round(profit*sh1/100);
+const r2=Math.round(profit*sh2/100);
+const r3=Math.round(profit*sh3/100);
+
+$('r1').textContent=fa(r1)+' تومان';
+$('r2').textContent=fa(r2)+' تومان';
+$('r3').textContent=fa(r3)+' تومان';
+$('r1').className='result green';
+$('r2').className='result green';
+$('r3').className='result green';
+
+settle();
+}
+
+function settle(){
+const n1=$('n1').value||'همکار ۱';
+const n2=$('n2').value||'همکار ۲';
+const n3=$('n3').value||'همکار ۳';
+const p1a=+$('p1a').value||0,p1b=+$('p1b').value||0;
+const p2a=+$('p2a').value||0,p2b=+$('p2b').value||0;
+const p3a=+$('p3a').value||0,p3b=+$('p3b').value||0;
+
+const bal1=p1a-p1b, bal2=p2a-p2b, bal3=p3a-p3b;
+const total=bal1+bal2+bal3;
+
+if(total===0){$('settleLines').innerHTML='<div class="empty">اطلاعات رو پر کن</div>';return;}
+
+const people=[{name:n1,bal:bal1},{name:n2,bal:bal2},{name:n3,bal:bal3}];
+const creditors=people.filter(p=>p.bal>0).map(p=>({...p,bal:p.bal}));
+const debtors=people.filter(p=>p.bal<0).map(p=>({...p,bal:-p.bal}));
+const lines=[];
+creditors.forEach(c=>{debtors.forEach(d=>{
+if(c.bal<=0||d.bal<=0)return;
+const amt=Math.min(c.bal,d.bal);
+lines.push({from:d.name,to:c.name,amount:amt});
+c.bal-=amt;d.bal-=amt;
+});});
+
+if(lines.length===0){$('settleLines').innerHTML='<div class="empty">همه تسویه‌ن ✅</div>';return;}
+let html='';
+lines.forEach(l=>{
+html+='<div class="settle-line"><span><b>'+l.from+'</b></span><span class="arrow">←</span><span>به <b>'+l.to+'</b></span><span><b>'+fa(l.amount)+' تومان</b></span></div>';
+});
+$('settleLines').innerHTML=html;
+}
+
+calc();
+</script>
+</body>
+</html>

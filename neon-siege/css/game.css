@@ -1,0 +1,1630 @@
+:root{
+  --bg:#050711;
+  --bg2:#08101d;
+  --panel:rgba(8,14,28,.88);
+  --panel2:rgba(12,22,42,.92);
+
+  --cyan:#00e5ff;
+  --cyan2:#70f4ff;
+
+  --red:#ff3e67;
+  --purple:#b95cff;
+  --gold:#f3c969;
+
+  --green:#46ef9a;
+  --blue:#39a8ff;
+
+  --text:#edf7ff;
+  --muted:#7f91aa;
+
+  --border:rgba(140,195,255,.15);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      #0c1830 0%,
+      #050711 55%,
+      #02040a 100%
+    );
+
+  color:var(--text);
+
+  font-family:
+    Tahoma,
+    Arial,
+    sans-serif;
+
+  touch-action:none;
+  overscroll-behavior:none;
+}
+
+body{
+  position:fixed;
+  inset:0;
+}
+
+/* ============================
+   GAME CANVAS
+============================ */
+
+#game{
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  display:block;
+
+  background:#050711;
+}
+
+/* ============================
+   SCREEN EFFECTS
+============================ */
+
+#screenFlash{
+  position:absolute;
+  inset:0;
+
+  z-index:9;
+
+  pointer-events:none;
+
+  opacity:0;
+
+  background:white;
+
+  mix-blend-mode:screen;
+
+  transition:
+    opacity .05s linear;
+}
+
+#vignette{
+  position:absolute;
+  inset:0;
+
+  z-index:8;
+
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,.18) 65%,
+      rgba(0,0,0,.72) 100%
+    );
+}
+
+/* ============================
+   HUD
+============================ */
+
+#hud{
+  position:absolute;
+
+  top:max(
+    10px,
+    env(safe-area-inset-top)
+  );
+
+  left:12px;
+  right:12px;
+
+  z-index:10;
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(180px,1fr)
+    auto
+    minmax(180px,1fr);
+
+  gap:10px;
+
+  pointer-events:none;
+}
+
+.hud-card{
+  min-width:0;
+
+  padding:
+    10px
+    12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(12,22,42,.90),
+      rgba(5,9,19,.82)
+    );
+
+  backdrop-filter:
+    blur(9px);
+
+  box-shadow:
+    0 12px 30px
+    rgba(0,0,0,.28),
+    inset
+    0 0 25px
+    rgba(255,255,255,.018);
+}
+
+.hud-row{
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  gap:10px;
+
+  font-size:12px;
+
+  font-weight:bold;
+}
+
+.hud-title{
+  letter-spacing:.6px;
+}
+
+.hud-small{
+  margin-top:6px;
+
+  color:var(--muted);
+
+  font-size:10px;
+}
+
+.cyan{
+  color:var(--cyan);
+
+  text-shadow:
+    0 0 8px
+    rgba(0,229,255,.55);
+}
+
+/* ============================
+   HEALTH / SHIELD
+============================ */
+
+.bar{
+  width:100%;
+
+  overflow:hidden;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.07);
+}
+
+.health-bar{
+  height:8px;
+
+  margin-top:8px;
+}
+
+.shield-bar{
+  height:4px;
+
+  margin-top:4px;
+}
+
+.bar-fill{
+  height:100%;
+
+  width:100%;
+
+  transition:
+    width .12s linear;
+}
+
+#healthFill{
+  background:
+    linear-gradient(
+      90deg,
+      #b92045,
+      #ff3e67,
+      #ff708d
+    );
+
+  box-shadow:
+    0 0 12px
+    rgba(255,62,103,.55);
+}
+
+#shieldFill{
+  width:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2674ff,
+      #39a8ff,
+      #8edbff
+    );
+
+  box-shadow:
+    0 0 10px
+    rgba(57,168,255,.7);
+}
+
+/* ============================
+   CENTER HUD
+============================ */
+
+#centerHud{
+  min-width:130px;
+
+  text-align:center;
+}
+
+#waveText{
+  color:var(--gold);
+
+  font-size:17px;
+
+  font-weight:900;
+
+  letter-spacing:1px;
+
+  text-shadow:
+    0 0 12px
+    rgba(243,201,105,.28);
+}
+
+#enemyCounter{
+  margin-top:3px;
+
+  font-size:10px;
+
+  color:#a8b5c8;
+}
+
+#scoreText{
+  margin-top:4px;
+
+  font-size:10px;
+
+  color:#667997;
+}
+
+/* ============================
+   WEAPON HUD
+============================ */
+
+#weaponHud{
+  text-align:left;
+
+  direction:ltr;
+}
+
+#weaponName{
+  color:var(--cyan);
+
+  font-size:13px;
+
+  font-weight:900;
+
+  letter-spacing:1px;
+}
+
+#ammoText{
+  margin-top:2px;
+
+  font-size:27px;
+
+  line-height:1;
+
+  font-weight:900;
+
+  color:white;
+}
+
+.reload-bar{
+  height:4px;
+
+  margin-top:7px;
+}
+
+#reloadFill{
+  width:0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #7f692e,
+      var(--gold)
+    );
+
+  box-shadow:
+    0 0 10px
+    rgba(243,201,105,.55);
+}
+
+#weaponInfo{
+  margin-top:5px;
+
+  color:#71829d;
+
+  font-size:9px;
+}
+
+/* ============================
+   BOSS HUD
+============================ */
+
+#bossHud{
+  position:absolute;
+
+  top:96px;
+
+  left:50%;
+
+  transform:
+    translateX(-50%);
+
+  z-index:10;
+
+  width:min(
+    560px,
+    70vw
+  );
+
+  pointer-events:none;
+
+  text-align:center;
+}
+
+#bossName{
+  margin-bottom:6px;
+
+  color:#e9c8ff;
+
+  font-weight:900;
+
+  font-size:12px;
+
+  letter-spacing:2px;
+
+  text-shadow:
+    0 0 14px
+    rgba(185,92,255,.55);
+}
+
+.boss-bar{
+  width:100%;
+
+  height:12px;
+
+  overflow:hidden;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.07);
+
+  border:
+    1px solid
+    rgba(185,92,255,.35);
+
+  box-shadow:
+    0 0 20px
+    rgba(185,92,255,.08);
+}
+
+#bossHealthFill{
+  width:100%;
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #7923c4,
+      #b95cff,
+      #e292ff
+    );
+
+  box-shadow:
+    0 0 18px
+    rgba(185,92,255,.65);
+}
+
+/* ============================
+   XP
+============================ */
+
+#xpHud{
+  position:absolute;
+
+  left:50%;
+
+  bottom:
+    max(
+      12px,
+      env(safe-area-inset-bottom)
+    );
+
+  transform:
+    translateX(-50%);
+
+  width:min(
+    390px,
+    38vw
+  );
+
+  z-index:10;
+
+  pointer-events:none;
+}
+
+#xpText{
+  margin-bottom:5px;
+
+  color:#7d91aa;
+
+  text-align:center;
+
+  font-size:9px;
+}
+
+.xp-bar{
+  height:5px;
+
+  overflow:hidden;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.07);
+}
+
+#xpFill{
+  width:0;
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2bbbd2,
+      var(--cyan)
+    );
+
+  box-shadow:
+    0 0 10px
+    rgba(0,229,255,.6);
+}
+
+/* ============================
+   COMBO
+============================ */
+
+#comboBox{
+  position:absolute;
+
+  top:50%;
+
+  left:26px;
+
+  transform:
+    translateY(-50%);
+
+  z-index:10;
+
+  pointer-events:none;
+}
+
+#comboText{
+  color:var(--gold);
+
+  font-weight:900;
+
+  font-size:25px;
+
+  font-style:italic;
+
+  text-shadow:
+    0 0 18px
+    rgba(243,201,105,.5);
+}
+
+#comboTimer{
+  width:100px;
+
+  height:3px;
+
+  margin-top:4px;
+
+  border-radius:20px;
+
+  background:var(--gold);
+}
+
+/* ============================
+   MOBILE CONTROLS
+============================ */
+
+#mobileControls{
+  position:absolute;
+
+  inset:0;
+
+  z-index:12;
+
+  pointer-events:none;
+
+  display:none;
+}
+
+#moveZone,
+#aimZone{
+  position:absolute;
+
+  bottom:
+    max(
+      17px,
+      env(safe-area-inset-bottom)
+    );
+
+  width:150px;
+  height:150px;
+
+  pointer-events:auto;
+}
+
+#moveZone{
+  left:
+    max(
+      14px,
+      env(safe-area-inset-left)
+    );
+}
+
+#aimZone{
+  right:
+    max(
+      14px,
+      env(safe-area-inset-right)
+    );
+}
+
+#moveBase,
+#aimBase{
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:122px;
+  height:122px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(30,80,110,.12),
+      rgba(5,10,22,.34)
+    );
+
+  border:
+    1px solid
+    rgba(0,229,255,.22);
+
+  box-shadow:
+    inset
+    0 0 30px
+    rgba(0,0,0,.45),
+    0 0 22px
+    rgba(0,229,255,.04);
+}
+
+#aimBase{
+  border-color:
+    rgba(255,62,103,.24);
+}
+
+#moveStick,
+#aimStick{
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:54px;
+  height:54px;
+
+  transform:
+    translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(255,255,255,.25),
+      rgba(0,229,255,.16)
+    );
+
+  border:
+    1px solid
+    rgba(0,229,255,.55);
+
+  box-shadow:
+    0 8px 20px
+    rgba(0,0,0,.25),
+    0 0 16px
+    rgba(0,229,255,.08);
+}
+
+#aimStick{
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(255,255,255,.22),
+      rgba(255,62,103,.14)
+    );
+
+  border-color:
+    rgba(255,62,103,.55);
+}
+
+/* ============================
+   GAME BUTTONS
+============================ */
+
+.game-button{
+  position:absolute;
+
+  border:none;
+
+  pointer-events:auto;
+
+  display:grid;
+  place-items:center;
+
+  color:white;
+
+  font-family:inherit;
+
+  font-weight:900;
+
+  user-select:none;
+
+  border-radius:50%;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(24,39,70,.92),
+      rgba(7,13,28,.92)
+    );
+
+  border:
+    1px solid
+    rgba(255,255,255,.14);
+
+  box-shadow:
+    0 12px 28px
+    rgba(0,0,0,.32),
+    inset
+    0 0 18px
+    rgba(255,255,255,.03);
+
+  transition:
+    transform .06s,
+    filter .06s;
+}
+
+.game-button:active,
+.game-button.active{
+  transform:
+    scale(.91);
+
+  filter:
+    brightness(1.35);
+}
+
+.fire-button{
+  width:78px;
+  height:78px;
+
+  right:35px;
+
+  bottom:46px;
+
+  font-size:12px;
+
+  color:#ffdbe4;
+
+  border-color:
+    rgba(255,62,103,.55);
+
+  box-shadow:
+    0 0 24px
+    rgba(255,62,103,.12),
+    0 10px 28px
+    rgba(0,0,0,.34);
+}
+
+.dash-button{
+  width:55px;
+  height:55px;
+
+  right:127px;
+
+  bottom:28px;
+
+  color:var(--gold);
+
+  font-size:20px;
+
+  border-color:
+    rgba(243,201,105,.5);
+}
+
+.reload-button{
+  width:49px;
+  height:49px;
+
+  right:137px;
+
+  bottom:94px;
+
+  color:#b5c4d8;
+
+  font-size:12px;
+}
+
+.weapon-button{
+  width:49px;
+  height:49px;
+
+  right:71px;
+
+  bottom:137px;
+
+  color:var(--cyan2);
+
+  font-size:19px;
+
+  border-color:
+    rgba(0,229,255,.36);
+}
+
+/* ============================
+   OVERLAYS
+============================ */
+
+.overlay{
+  position:absolute;
+
+  inset:0;
+
+  z-index:100;
+
+  display:grid;
+
+  place-items:center;
+
+  padding:20px;
+
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(12,30,58,.68),
+      rgba(2,5,12,.94)
+    );
+
+  backdrop-filter:
+    blur(7px);
+}
+
+.hidden{
+  display:none !important;
+}
+
+/* ============================
+   MENU
+============================ */
+
+.menu-panel{
+  width:min(
+    520px,
+    94vw
+  );
+
+  padding:30px;
+
+  text-align:center;
+
+  border-radius:24px;
+
+  border:
+    1px solid
+    rgba(0,229,255,.16);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10,20,39,.97),
+      rgba(4,9,19,.97)
+    );
+
+  box-shadow:
+    0 35px 100px
+    rgba(0,0,0,.62),
+    inset
+    0 0 50px
+    rgba(0,229,255,.02);
+}
+
+.game-logo{
+  font-size:
+    clamp(
+      42px,
+      9vw,
+      72px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:-3px;
+
+  color:white;
+
+  line-height:.9;
+
+  text-shadow:
+    0 0 24px
+    rgba(0,229,255,.22);
+}
+
+.game-logo span{
+  color:var(--cyan);
+
+  text-shadow:
+    0 0 25px
+    rgba(0,229,255,.5);
+}
+
+.subtitle{
+  margin-top:12px;
+
+  color:var(--gold);
+
+  font-size:10px;
+
+  letter-spacing:3px;
+}
+
+.menu-description{
+  max-width:430px;
+
+  margin:
+    18px auto
+    20px;
+
+  color:#9aabc2;
+
+  font-size:13px;
+
+  line-height:2;
+}
+
+.menu-button{
+  width:min(
+    260px,
+    100%
+  );
+
+  margin:6px auto;
+
+  padding:
+    13px 22px;
+
+  display:block;
+
+  border-radius:12px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(27,44,72,.96),
+      rgba(10,17,31,.96)
+    );
+
+  color:white;
+
+  font-family:inherit;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 30px
+    rgba(0,0,0,.28);
+}
+
+.menu-button:active{
+  transform:
+    translateY(1px);
+}
+
+.primary-button{
+  color:#00151b;
+
+  border-color:
+    rgba(0,229,255,.5);
+
+  background:
+    linear-gradient(
+      180deg,
+      #55f4ff,
+      #00b9d4
+    );
+
+  box-shadow:
+    0 0 28px
+    rgba(0,229,255,.18),
+    0 12px 30px
+    rgba(0,0,0,.35);
+}
+
+.controls-help{
+  margin-top:17px;
+
+  color:#5e718d;
+
+  font-size:10px;
+
+  line-height:1.9;
+}
+
+/* ============================
+   PAUSE / GAME OVER
+============================ */
+
+.pause-title,
+#gameOverTitle{
+  margin-bottom:20px;
+
+  font-size:34px;
+
+  font-weight:1000;
+
+  letter-spacing:1px;
+}
+
+.pause-title{
+  color:var(--cyan);
+}
+
+#gameOverTitle{
+  color:var(--red);
+
+  text-shadow:
+    0 0 20px
+    rgba(255,62,103,.28);
+}
+
+#finalStats{
+  margin-bottom:20px;
+
+  color:#9badc3;
+
+  font-size:13px;
+
+  line-height:2;
+}
+
+/* ============================
+   UPGRADE SCREEN
+============================ */
+
+.upgrade-panel{
+  width:min(
+    900px,
+    96vw
+  );
+
+  text-align:center;
+}
+
+.upgrade-header{
+  color:var(--gold);
+
+  font-size:
+    clamp(
+      28px,
+      6vw,
+      48px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:2px;
+
+  text-shadow:
+    0 0 24px
+    rgba(243,201,105,.22);
+}
+
+.upgrade-subtitle{
+  margin:
+    4px 0
+    20px;
+
+  color:#8194ad;
+
+  font-size:12px;
+}
+
+#upgradeCards{
+  display:grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0,1fr)
+    );
+
+  gap:14px;
+}
+
+.upgrade-card{
+  position:relative;
+
+  min-height:180px;
+
+  padding:
+    20px
+    16px;
+
+  overflow:hidden;
+
+  text-align:center;
+
+  border-radius:18px;
+
+  border:
+    1px solid
+    rgba(0,229,255,.15);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(13,27,49,.97),
+      rgba(5,12,25,.97)
+    );
+
+  color:white;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 20px 45px
+    rgba(0,0,0,.28);
+
+  transition:
+    transform .14s,
+    border-color .14s,
+    box-shadow .14s;
+}
+
+.upgrade-card:hover,
+.upgrade-card:active{
+  transform:
+    translateY(-5px);
+
+  border-color:
+    rgba(0,229,255,.5);
+
+  box-shadow:
+    0 0 28px
+    rgba(0,229,255,.1),
+    0 24px 45px
+    rgba(0,0,0,.36);
+}
+
+.upgrade-icon{
+  margin-bottom:10px;
+
+  font-size:34px;
+}
+
+.upgrade-name{
+  color:var(--cyan2);
+
+  font-size:15px;
+
+  font-weight:900;
+}
+
+.upgrade-description{
+  margin-top:9px;
+
+  color:#8fa1b8;
+
+  font-size:11px;
+
+  line-height:1.8;
+}
+
+.upgrade-level{
+  margin-top:10px;
+
+  color:var(--gold);
+
+  font-size:9px;
+}
+
+/* ============================
+   NOTIFICATION
+============================ */
+
+#notification{
+  position:absolute;
+
+  left:50%;
+
+  top:155px;
+
+  z-index:30;
+
+  transform:
+    translateX(-50%)
+    translateY(-10px);
+
+  padding:
+    9px
+    15px;
+
+  opacity:0;
+
+  pointer-events:none;
+
+  border-radius:10px;
+
+  color:white;
+
+  background:
+    rgba(6,12,24,.88);
+
+  border:
+    1px solid
+    rgba(0,229,255,.2);
+
+  box-shadow:
+    0 12px 28px
+    rgba(0,0,0,.34);
+
+  font-size:11px;
+
+  transition:
+    opacity .18s,
+    transform .18s;
+}
+
+#notification.show{
+  opacity:1;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
+}
+
+/* ============================
+   COARSE POINTER / MOBILE
+============================ */
+
+@media
+(pointer:coarse),
+(max-width:900px){
+
+  #mobileControls{
+    display:block;
+  }
+
+  #hud{
+    top:
+      max(
+        6px,
+        env(safe-area-inset-top)
+      );
+
+    left:7px;
+    right:7px;
+
+    gap:5px;
+
+    grid-template-columns:
+      1fr
+      84px
+      1fr;
+  }
+
+  .hud-card{
+    padding:
+      7px
+      8px;
+
+    border-radius:10px;
+  }
+
+  .hud-row{
+    font-size:9px;
+  }
+
+  .hud-small{
+    font-size:8px;
+  }
+
+  .health-bar{
+    height:6px;
+  }
+
+  #centerHud{
+    min-width:84px;
+  }
+
+  #waveText{
+    font-size:13px;
+  }
+
+  #enemyCounter,
+  #scoreText{
+    font-size:7px;
+  }
+
+  #weaponName{
+    font-size:9px;
+  }
+
+  #ammoText{
+    font-size:19px;
+  }
+
+  #weaponInfo{
+    display:none;
+  }
+
+  #bossHud{
+    top:78px;
+
+    width:58vw;
+  }
+
+  #xpHud{
+    bottom:
+      max(
+        7px,
+        env(safe-area-inset-bottom)
+      );
+
+    width:34vw;
+  }
+
+  #xpText{
+    display:none;
+  }
+}
+
+/* ============================
+   SMALL MOBILE
+============================ */
+
+@media
+(max-width:620px){
+
+  #hud{
+    grid-template-columns:
+      1fr
+      70px
+      1fr;
+  }
+
+  .hud-title{
+    max-width:82px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    white-space:nowrap;
+  }
+
+  #moveZone,
+  #aimZone{
+    width:130px;
+    height:130px;
+  }
+
+  #moveBase,
+  #aimBase{
+    width:106px;
+    height:106px;
+  }
+
+  #moveStick,
+  #aimStick{
+    width:48px;
+    height:48px;
+  }
+
+  .fire-button{
+    width:70px;
+    height:70px;
+
+    right:26px;
+
+    bottom:36px;
+  }
+
+  .dash-button{
+    right:108px;
+
+    bottom:21px;
+
+    width:50px;
+    height:50px;
+  }
+
+  .reload-button{
+    right:117px;
+
+    bottom:79px;
+
+    width:44px;
+    height:44px;
+  }
+
+  .weapon-button{
+    right:59px;
+
+    bottom:119px;
+
+    width:44px;
+    height:44px;
+  }
+
+  #upgradeCards{
+    gap:8px;
+  }
+
+  .upgrade-card{
+    min-height:160px;
+
+    padding:
+      14px
+      9px;
+  }
+
+  .upgrade-icon{
+    font-size:27px;
+  }
+
+  .upgrade-name{
+    font-size:11px;
+  }
+
+  .upgrade-description{
+    font-size:9px;
+  }
+}
+
+/* ============================
+   LANDSCAPE MOBILE
+============================ */
+
+@media
+(max-height:520px){
+
+  #hud{
+    max-width:680px;
+
+    margin:auto;
+  }
+
+  #bossHud{
+    top:63px;
+  }
+
+  #moveZone,
+  #aimZone{
+    width:115px;
+    height:115px;
+
+    bottom:5px;
+  }
+
+  #moveBase,
+  #aimBase{
+    width:96px;
+    height:96px;
+  }
+
+  #moveStick,
+  #aimStick{
+    width:42px;
+    height:42px;
+  }
+
+  .fire-button{
+    width:64px;
+    height:64px;
+
+    right:24px;
+
+    bottom:22px;
+  }
+
+  .dash-button{
+    width:46px;
+    height:46px;
+
+    right:96px;
+
+    bottom:12px;
+  }
+
+  .reload-button{
+    width:42px;
+    height:42px;
+
+    right:105px;
+
+    bottom:64px;
+  }
+
+  .weapon-button{
+    width:42px;
+    height:42px;
+
+    right:52px;
+
+    bottom:90px;
+  }
+
+  #xpHud{
+    bottom:4px;
+
+    width:28vw;
+  }
+
+  .menu-panel{
+    padding:20px;
+  }
+
+  .game-logo{
+    font-size:44px;
+  }
+
+  .menu-description{
+    margin:
+      10px auto
+      12px;
+
+    line-height:1.6;
+  }
+
+  #upgradeCards{
+    max-width:760px;
+
+    margin:auto;
+  }
+
+  .upgrade-card{
+    min-height:135px;
+  }
+}
+
+/* ============================
+   DESKTOP
+============================ */
+
+@media
+(pointer:fine)
+and
+(min-width:901px){
+
+  #mobileControls{
+    display:none !important;
+  }
+
+  #game{
+    cursor:crosshair;
+  }
+}
+
+/* =========================================================
+   PATCH 27 — MOBILE HUD / RTL FIX
+========================================================= */
+
+#hpText,
+#shieldText,
+#ammoText,
+#scoreText,
+#xpText,
+#enemyCount,
+#levelText,
+#waveText {
+  direction: ltr !important;
+  unicode-bidi: isolate !important;
+}
+
+#playerHud,
+#weaponHud,
+#centerHud {
+  min-width: 0;
+}
+
+#playerHud {
+  overflow: hidden;
+}
+
+#playerHud > * {
+  min-width: 0;
+}
+
+#playerHud [class*="name"],
+#playerHud [class*="title"] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+
+  #hud {
+    gap: 7px;
+  }
+
+  #playerHud,
+  #weaponHud,
+  #centerHud {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  #hpText,
+  #shieldText,
+  #ammoText {
+    white-space: nowrap;
+  }
+
+}
+

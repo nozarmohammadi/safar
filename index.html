@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
 <style>
 :root{
   --bg:#0a0e1a;
@@ -440,7 +441,8 @@ body{
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="window.print()">چاپ / ذخیره PDF</button>
+          <button class="btn btn-primary" onclick="downloadPDF()">📥 ذخیره PDF</button>
+          <button class="btn btn-secondary" onclick="window.print()" style="margin-top:8px">🖨️ چاپگر</button>
         </div>
       </div>
     </div>
@@ -844,6 +846,59 @@ savedFields.forEach(id => {
     localStorage.setItem('field_' + id, el.value);
   });
 });
+
+// ===== ذخیره PDF (دقیقاً مثل پیش‌نمایش) =====
+function downloadPDF(){
+  const el = document.getElementById('invoicePreview').querySelector('.card');
+  if(!el){ alert('اول فاکتور رو بساز'); return; }
+  
+  // دکمه‌ها رو مخفی کن
+  const btns = el.querySelectorAll('.btn, .btn-row');
+  btns.forEach(b => b.style.display = 'none');
+  
+  // نام فایل
+  const num = document.getElementById('invNum').value || 'invoice';
+  const customer = document.getElementById('customer').value.trim() || '';
+  const filename = 'فاکتور-' + num + (customer ? '-' + customer : '') + '.pdf';
+  
+  // تنظیمات PDF
+  const opt = {
+    margin: 0,
+    filename: filename,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { 
+      scale: 3,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      windowWidth: el.scrollWidth,
+      windowHeight: el.scrollHeight
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait' 
+    },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+  
+  // نمایش لودینگ
+  const loading = document.createElement('div');
+  loading.style.cssText = 'position:fixed;inset:0;background:rgba(10,14,26,0.9);z-index:99999;display:flex;align-items:center;justify-content:center;color:#c9a961;font-family:Vazirmatn;font-size:16px;font-weight:700;flex-direction:column;gap:16px';
+  loading.innerHTML = '<div style="width:50px;height:50px;border:3px solid rgba(201,169,97,0.2);border-top-color:#c9a961;border-radius:50%;animation:spin 0.8s linear infinite"></div><div>در حال ساخت PDF...</div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+  document.body.appendChild(loading);
+  
+  // ساخت PDF
+  html2pdf().set(opt).from(el).save().then(() => {
+    document.body.removeChild(loading);
+    btns.forEach(b => b.style.display = '');
+  }).catch(err => {
+    console.error(err);
+    document.body.removeChild(loading);
+    btns.forEach(b => b.style.display = '');
+    alert('خطا در ساخت PDF. دوباره امتحان کن.');
+  });
+}
 
 // ===== شروع =====
 ensureInvoiceNum();

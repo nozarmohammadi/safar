@@ -5,175 +5,391 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>کرکره سازی ایران زمین</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f2942">
+<meta name="theme-color" content="#0a0e1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="کرکره ایران زمین">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a1628;
-  --bg2:#0f1f38;
-  --card:#0f2942;
-  --border:#1e3a5f;
-  --gold:#c9a961;
-  --gold2:#a88a45;
+  --bg:#0a0e1a;
+  --bg2:#0f1424;
+  --card:rgba(255,255,255,0.04);
+  --card-hover:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);
   --text:#fff;
   --muted:#7a8fa8;
+  --gold:#c9a961;
+  --gold2:#e5c97a;
+  --gold3:#a88a45;
+  --blue:#3b82f6;
   --green:#16a34a;
   --red:#dc2626;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{
-  font-family:'Vazirmatn',Tahoma,sans-serif;
+  font-family:'Vazirmatn',-apple-system,'Segoe UI',Tahoma,sans-serif;
   background:var(--bg);
   color:var(--text);
-  font-size:13px;
+  font-size:15px;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss02";
 }
-.app{height:100%;display:flex;flex-direction:column;max-width:600px;margin:0 auto;background:var(--bg);position:relative}
-
-/* ===== تب‌بار ===== */
-.tabbar{
+.app{
+  height:100%;
   display:flex;
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-  padding:6px 8px calc(6px + env(safe-area-inset-bottom));
-  flex-shrink:0;
-  z-index:100;
+  flex-direction:column;
+  max-width:680px;
+  margin:0 auto;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(201,169,97,0.08),transparent 40%),
+    radial-gradient(circle at 80% 100%,rgba(59,130,246,0.06),transparent 40%),
+    var(--bg);
 }
-.tabbar button{
-  flex:1;
-  background:transparent;
-  border:none;
-  color:var(--muted);
-  font-family:inherit;
-  font-size:11px;
-  font-weight:600;
-  padding:8px 4px;
-  border-radius:10px;
+
+/* ===== صفحه ===== */
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  transform:translateX(100%);
+  transition:transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow:hidden;
+}
+.screen.active{transform:translateX(0)}
+.screen.home{transform:translateX(0)}
+
+/* ===== هدر ===== */
+.screen-header{
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid var(--border);
+  background:rgba(10,14,26,0.85);
+  backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);
+  position:sticky;
+  top:0;
+  z-index:10;
+  flex-shrink:0;
+}
+.screen-header .back{
+  width:38px;height:38px;
+  border-radius:50%;
+  background:var(--card);
+  border:1px solid var(--border);
+  font-size:22px;
+  color:var(--gold);
   cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-family:inherit;
+  font-weight:300;
   transition:all 0.15s;
+  flex-shrink:0;
+}
+.screen-header .back:active{transform:scale(0.92);background:var(--card-hover)}
+.screen-header .title{
+  flex:1;
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:-0.3px;
+}
+.screen-header .actions{display:flex;gap:6px}
+.screen-header .action-btn{
+  padding:7px 14px;
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:18px;
+  font-family:inherit;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+}
+.screen-header .action-btn:active{background:var(--card-hover)}
+.screen-header .action-btn.gold{
+  background:linear-gradient(135deg,var(--gold),var(--gold3));
+  color:var(--bg);
+  border-color:transparent;
+}
+
+/* ===== بدنه صفحه ===== */
+.screen-body{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:18px;
+  padding-bottom:40px;
+}
+
+/* ===== صفحه اصلی ===== */
+.home{
+  flex:1;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:3px;
-}
-.tabbar button .ic{
-  font-size:20px;
-  line-height:1;
-}
-.tabbar button.active{
-  color:var(--gold);
-  background:rgba(201,169,97,0.08);
-}
-
-/* ===== محتوا ===== */
-.content{
-  flex:1;
-  overflow-y:auto;
-  overflow-x:hidden;
-  padding:14px;
-  padding-bottom:20px;
-}
-.tab{display:none}
-.tab.active{display:block}
-
-/* ===== هدر صفحه ===== */
-.page-header{
+  justify-content:center;
+  padding:30px 20px;
   text-align:center;
-  margin-bottom:18px;
-  padding-bottom:14px;
-  border-bottom:1px solid var(--border);
+  overflow-y:auto;
 }
-.page-header h1{
-  font-size:18px;
-  font-weight:800;
-  color:var(--gold);
-  letter-spacing:-0.3px;
-  margin-bottom:4px;
+.home-inner{max-width:400px;width:100%}
+
+/* ===== انیمیشن کرکره ===== */
+.shutter-anim{
+  width:120px;
+  height:120px;
+  margin:0 auto 28px;
+  position:relative;
+  border-radius:24px;
+  background:linear-gradient(160deg,#1a2c47,#0f1f38);
+  border:2px solid rgba(201,169,97,0.3);
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.5),
+    0 0 60px rgba(201,169,97,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow:hidden;
 }
-.page-header p{
-  font-size:11px;
-  color:var(--muted);
+.shutter-anim::before{
+  content:'';
+  position:absolute;
+  inset:14px;
+  border-radius:10px;
+  background:#0a0e1a;
+  z-index:1;
 }
-.page-header .line{
-  width:40px;height:2px;
-  background:var(--gold);
-  margin:8px auto 0;
+.shutter-anim::after{
+  content:'';
+  position:absolute;
+  inset:14px;
+  border-radius:10px;
+  border:1.5px solid rgba(201,169,97,0.4);
+  z-index:4;
+  pointer-events:none;
+}
+/* پنجره پشت کرکره */
+.shutter-window{
+  position:absolute;
+  inset:14px;
+  border-radius:10px;
+  background:linear-gradient(180deg,#1e3a5f 0%,#0f2942 100%);
+  z-index:0;
+  overflow:hidden;
+}
+.shutter-window::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 30%,rgba(201,169,97,0.6),transparent 30%),
+    radial-gradient(circle at 70% 65%,rgba(201,169,97,0.4),transparent 25%);
+  animation:lights 3s ease-in-out infinite alternate;
+}
+@keyframes lights{
+  0%{opacity:0.3}
+  100%{opacity:1}
+}
+/* نوارهای کرکره */
+.shutter-slats{
+  position:absolute;
+  top:14px;left:14px;right:14px;
+  z-index:2;
+  animation:shutterMove 5s ease-in-out infinite;
+}
+.shutter-slats .slat{
+  height:8px;
+  margin-bottom:3px;
+  background:linear-gradient(180deg,#3d5a80,#2c4a6e);
+  border-radius:3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 1px 0 rgba(0,0,0,0.2);
+}
+.shutter-slats .slat:nth-child(odd){
+  background:linear-gradient(180deg,#456a94,#33527a);
+}
+@keyframes shutterMove{
+  0%,35%{transform:translateY(0)}
+  65%,100%{transform:translateY(-65%)}
+}
+/* ریل کنار */
+.shutter-rail{
+  position:absolute;
+  right:8px;top:14px;bottom:14px;
+  width:3px;
+  background:linear-gradient(180deg,var(--gold),var(--gold3));
   border-radius:2px;
+  z-index:3;
+  box-shadow:0 0 8px rgba(201,169,97,0.5);
+}
+/* موتور */
+.shutter-motor{
+  position:absolute;
+  top:6px;left:50%;
+  transform:translateX(-50%);
+  width:28px;height:8px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold3));
+  border-radius:4px;
+  z-index:3;
+  box-shadow:0 2px 6px rgba(0,0,0,0.5),0 0 12px rgba(201,169,97,0.4);
 }
 
-/* ===== کارت ===== */
-.card{
+.home h1{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+  margin-bottom:8px;
+  line-height:1.4;
+}
+.home h1 .gold{
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.home .subtitle{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:36px;
+  letter-spacing:0.5px;
+}
+.home-cards{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.home-card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:12px;
-}
-.card h2{
-  font-size:13px;
-  color:var(--gold);
-  font-weight:700;
-  margin-bottom:12px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--border);
+  border-radius:16px;
+  padding:16px 18px;
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:14px;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none;
+  color:var(--text);
+  position:relative;
+  overflow:hidden;
 }
-.card h2::before{
+.home-card::before{
   content:'';
-  width:3px;height:14px;
-  background:var(--gold);
-  border-radius:2px;
+  position:absolute;
+  right:0;top:0;bottom:0;
+  width:3px;
+  background:transparent;
+  transition:background 0.2s;
+}
+.home-card:active{transform:scale(0.985);background:var(--card-hover)}
+.home-card.c1::before{background:var(--blue)}
+.home-card.c2::before{background:var(--green)}
+.home-card.c3::before{background:var(--gold)}
+.home-card .icon svg{width:22px;height:22px;stroke:currentColor;color:#fff}
+.home-card .icon{
+  width:46px;height:46px;
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  flex-shrink:0;
+  border:1px solid var(--border);
+}
+.home-card.c1 .icon{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);color:#60a5fa}
+.home-card.c2 .icon{background:rgba(22,163,74,0.12);border-color:rgba(22,163,74,0.3);color:#4ade80}
+.home-card.c3 .icon{background:rgba(201,169,97,0.12);border-color:rgba(201,169,97,0.3);color:#e5c97a}
+.home-card .info{flex:1;text-align:right;min-width:0}
+.home-card .info .t{
+  font-size:15px;
+  font-weight:700;
+  margin-bottom:3px;
+  letter-spacing:-0.2px;
+}
+.home-card .info .d{
+  font-size:11.5px;
+  color:var(--muted);
+}
+.home-card .arrow{
+  color:rgba(255,255,255,0.2);
+  font-size:22px;
+  font-weight:300;
+  transition:all 0.2s;
+}
+.home-card:active .arrow{color:var(--gold);transform:translateX(-3px)}
+
+.home-footer{
+  margin-top:36px;
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.9;
+}
+.home-footer .contact{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+}
+.home-footer .slogan{
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-weight:700;
+  letter-spacing:3px;
+  font-size:10px;
+  opacity:0.85;
 }
 
 /* ===== فرم ===== */
-label{
+.field{margin-bottom:12px}
+.field label{
   display:block;
-  font-size:11px;
+  font-size:11.5px;
   color:var(--muted);
-  margin-bottom:4px;
-  margin-top:8px;
+  margin-bottom:6px;
   font-weight:500;
 }
-label:first-child{margin-top:0}
-input,textarea,select{
+.field input, .field textarea{
   width:100%;
-  padding:10px 12px;
-  background:var(--bg);
+  padding:13px 14px;
+  background:rgba(255,255,255,0.03);
   border:1px solid var(--border);
-  border-radius:10px;
+  border-radius:12px;
   color:var(--text);
   font-family:inherit;
-  font-size:13px;
-  font-weight:500;
-  transition:all 0.15s;
+  font-size:14px;
   -webkit-appearance:none;
+  transition:all 0.15s;
 }
-input:focus,textarea:focus,select:focus{
+.field input:focus, .field textarea:focus{
   outline:none;
   border-color:var(--gold);
-  background:var(--bg2);
+  background:rgba(255,255,255,0.05);
+  box-shadow:0 0 0 4px rgba(201,169,97,0.1);
 }
-input::placeholder,textarea::placeholder{color:#4a5a70}
-textarea{min-height:70px;resize:vertical;line-height:1.7}
+.field input::placeholder, .field textarea::placeholder{color:rgba(255,255,255,0.2)}
+.field textarea{min-height:80px;resize:vertical;line-height:1.7}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
-/* ===== دکمه‌ها ===== */
+/* ===== دکمه ===== */
 .btn{
   width:100%;
-  padding:12px;
+  padding:14px;
   border:none;
-  border-radius:10px;
+  border-radius:12px;
   font-family:inherit;
-  font-size:13px;
+  font-size:14.5px;
   font-weight:700;
   cursor:pointer;
   transition:all 0.15s;
@@ -182,224 +398,350 @@ textarea{min-height:70px;resize:vertical;line-height:1.7}
   justify-content:center;
   gap:6px;
 }
-.btn:active{transform:scale(0.97)}
+.btn:active{transform:scale(0.98)}
 .btn-primary{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  background:linear-gradient(135deg,var(--gold2),var(--gold3));
   color:var(--bg);
-  box-shadow:0 4px 14px rgba(201,169,97,0.3);
+  box-shadow:0 6px 20px rgba(201,169,97,0.3);
 }
 .btn-secondary{
-  background:var(--bg);
+  background:var(--card);
   color:var(--text);
   border:1px solid var(--border);
 }
 .btn-danger{
-  background:rgba(220,38,38,0.15);
+  background:rgba(220,38,38,0.12);
   color:#f87171;
-  border:1px solid rgba(220,38,38,0.3);
+  border:1px solid rgba(220,38,38,0.25);
 }
-.btn-row{
-  display:flex;
-  gap:8px;
-  margin-top:12px;
-}
+.btn-row{display:flex;gap:10px;margin-top:14px}
 .btn-row .btn{flex:1}
 
-/* ===== گرید ===== */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-
-/* ===== نتیجه ===== */
-.result-box{
-  background:linear-gradient(135deg,var(--gold),var(--gold2));
-  color:var(--bg);
-  padding:14px 16px;
-  border-radius:12px;
-  margin-top:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+/* ===== کارت ===== */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
 }
-.result-box .label{font-size:12px;font-weight:700;opacity:0.9}
-.result-box .value{font-size:18px;font-weight:800;direction:ltr}
-
-/* ===== هشدار ===== */
-.alert{
-  background:rgba(201,169,97,0.08);
-  border:1px solid rgba(201,169,97,0.25);
-  border-right:3px solid var(--gold);
-  padding:10px 14px;
-  border-radius:8px;
-  font-size:11px;
+.card-title{
+  font-size:12px;
+  font-weight:700;
   color:var(--muted);
-  margin-top:10px;
-  line-height:1.7;
-}
-.alert.green{
-  background:rgba(22,163,74,0.08);
-  border-color:rgba(22,163,74,0.25);
-  border-right-color:var(--green);
-  color:#86efac;
-}
-.alert.red{
-  background:rgba(220,38,38,0.08);
-  border-color:rgba(220,38,38,0.25);
-  border-right-color:var(--red);
-  color:#fca5a5;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  margin-bottom:14px;
 }
 
-/* ===== لیست اقلام ===== */
-.items-list{list-style:none;margin-top:10px}
+/* ===== آیتم‌ها ===== */
+.items-list{list-style:none}
 .item-row{
   display:flex;
   align-items:center;
-  gap:8px;
-  padding:10px;
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:10px;
-  margin-bottom:6px;
-  font-size:12px;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
 }
+.item-row:last-child{border-bottom:none}
 .item-row .num{
-  width:24px;height:24px;
+  width:26px;height:26px;
   border-radius:50%;
-  background:rgba(201,169,97,0.15);
+  background:rgba(201,169,97,0.12);
   color:var(--gold);
   font-weight:700;
   font-size:11px;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
 }
-.item-row .desc{flex:1;color:var(--text);font-weight:500;word-wrap:break-word;min-width:0}
-.item-row .qty{font-size:10px;color:var(--muted);flex-shrink:0}
-.item-row .price{font-weight:700;color:var(--gold);font-size:12px;direction:ltr;flex-shrink:0;text-align:left;min-width:70px}
+.item-row .desc{flex:1;font-weight:500;word-wrap:break-word;min-width:0}
+.item-row .qty{font-size:11px;color:var(--muted);flex-shrink:0}
+.item-row .price{
+  font-weight:700;
+  font-size:13px;
+  direction:ltr;
+  flex-shrink:0;
+  text-align:left;
+  min-width:70px;
+  color:var(--gold);
+}
 .item-row .del{
-  background:rgba(220,38,38,0.15);
+  background:rgba(220,38,38,0.1);
   color:#f87171;
   border:none;
-  padding:5px 8px;
-  border-radius:6px;
-  font-size:11px;
+  padding:5px 9px;
+  border-radius:7px;
+  font-size:10.5px;
   cursor:pointer;
   font-family:inherit;
   flex-shrink:0;
 }
-.empty{
-  text-align:center;
-  padding:20px;
-  color:#4a5a70;
-  font-size:12px;
-}
 
-/* ===== تب‌های داخلی ===== */
-.sub-tabs{
-  display:flex;
-  gap:4px;
-  background:var(--bg);
-  padding:4px;
-  border-radius:10px;
-  margin-bottom:12px;
-  border:1px solid var(--border);
-}
-.sub-tabs button{
-  flex:1;
-  padding:8px;
-  background:transparent;
-  border:none;
-  color:var(--muted);
-  font-family:inherit;
-  font-size:11px;
-  font-weight:600;
-  border-radius:7px;
-  cursor:pointer;
-}
-.sub-tabs button.active{
+/* ===== نتیجه ===== */
+.result{
   background:var(--card);
-  color:var(--gold);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:14px;
 }
-.sub-content{display:none}
-.sub-content.active{display:block}
+.result .lbl{font-size:13px;color:var(--muted);font-weight:600}
+.result .val{font-size:20px;font-weight:800;color:var(--text);direction:ltr;letter-spacing:-0.5px}
+.result.highlight{
+  background:linear-gradient(135deg,#0f2942,#1a3a5c);
+  border-color:rgba(201,169,97,0.3);
+  box-shadow:0 10px 30px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.result.highlight .lbl{color:rgba(255,255,255,0.75)}
+.result.highlight .val{
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
 
-/* ===== ماشین‌حساب ===== */
-.calc-display{
+/* ===== سهم همکاران ===== */
+.shares{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:14px;
+}
+.share-box{
   background:var(--card);
   border:1px solid var(--border);
   border-radius:14px;
-  padding:20px;
-  margin-bottom:12px;
+  padding:14px 8px;
+  text-align:center;
+}
+.share-box .name{font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:600}
+.share-box .amount{
+  font-size:13px;
+  font-weight:800;
   direction:ltr;
-  min-height:110px;
+  color:var(--gold);
+  word-wrap:break-word;
+}
+.share-box .pct{font-size:10px;color:var(--muted);margin-top:4px}
+
+/* ===== هشدار ===== */
+.alert{
+  padding:12px 14px;
+  border-radius:12px;
+  font-size:12px;
+  line-height:1.6;
+  margin-top:12px;
+  background:rgba(255,149,0,0.08);
+  color:#fbbf24;
+  border:1px solid rgba(255,149,0,0.2);
+}
+.alert.ok{background:rgba(22,163,74,0.1);color:#86efac;border-color:rgba(22,163,74,0.3)}
+.alert.err{background:rgba(220,38,38,0.1);color:#fca5a5;border-color:rgba(220,38,38,0.3)}
+
+/* ===== ماشین‌حساب حرفه‌ای ===== */
+.calc-display{
+  background:linear-gradient(135deg,#0f1424,#1a2038);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:28px 24px;
+  margin-bottom:16px;
+  direction:ltr;
+  min-height:150px;
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.calc-display::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
 }
 .calc-display .expr{
-  font-size:13px;
+  font-size:14px;
   color:var(--muted);
-  min-height:18px;
-  margin-bottom:4px;
+  min-height:20px;
+  margin-bottom:8px;
   text-align:right;
   direction:rtl;
+  font-weight:500;
 }
 .calc-display .result{
-  font-size:34px;
-  color:var(--gold);
+  font-size:48px;
+  color:#fff;
   font-weight:800;
   text-align:left;
-  letter-spacing:-1px;
+  letter-spacing:-2px;
   word-wrap:break-word;
+  line-height:1.1;
+  background:linear-gradient(135deg,#fff,var(--gold2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  min-height:54px;
 }
 .calc-btns{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:8px;
+  gap:10px;
 }
 .calc-btns button{
-  padding:20px 6px;
-  font-size:20px;
-  font-weight:700;
-  background:var(--card);
+  aspect-ratio:1;
+  font-size:24px;
+  font-weight:500;
+  background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
   color:var(--text);
   border:1px solid var(--border);
-  border-radius:12px;
+  border-radius:50%;
   cursor:pointer;
   font-family:inherit;
-  transition:all 0.1s;
+  transition:all 0.12s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 2px 6px rgba(0,0,0,0.2);
 }
-.calc-btns button:active{transform:scale(0.94);background:var(--bg2)}
-.calc-btns button.op{color:var(--gold)}
-.calc-btns button.eq{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border-color:transparent}
-.calc-btns button.wide{grid-column:span 2}
-.calc-btns button.danger{color:#f87171}
+.calc-btns button::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center,rgba(255,255,255,0.15),transparent 70%);
+  opacity:0;
+  transition:opacity 0.15s;
+}
+.calc-btns button:active{transform:scale(0.92)}
+.calc-btns button:active::before{opacity:1}
+.calc-btns button.op{
+  color:var(--gold);
+  font-weight:700;
+  background:linear-gradient(135deg,rgba(201,169,97,0.12),rgba(201,169,97,0.04));
+  border-color:rgba(201,169,97,0.25);
+}
+.calc-btns button.op:active{
+  background:linear-gradient(135deg,rgba(201,169,97,0.25),rgba(201,169,97,0.1));
+}
+.calc-btns button.eq{
+  background:linear-gradient(135deg,var(--gold2),var(--gold3));
+  color:var(--bg);
+  border-color:transparent;
+  font-weight:800;
+  box-shadow:0 6px 20px rgba(201,169,97,0.4),inset 0 1px 0 rgba(255,255,255,0.3);
+}
+.calc-btns button.eq:active{transform:scale(0.92)}
+.calc-btns button.wide{
+  grid-column:span 2;
+  aspect-ratio:auto;
+  border-radius:50px;
+}
+.calc-btns button.danger{
+  color:#f87171;
+  background:linear-gradient(135deg,rgba(220,38,38,0.1),rgba(220,38,38,0.02));
+  border-color:rgba(220,38,38,0.2);
+}
+
+/* ===== چاپ ===== */
+@media print {
+  @page { size: A4 portrait; margin: 8mm; }
+  body { background: #fff; color: #000; overflow: visible; }
+  .screen-header, .btn, .btn-row, .field, .home-cards, .home-footer, .home h1, .home .subtitle, .shutter-anim { display: none !important; }
+  .screen { position: static; transform: none !important; display: block; background: #fff; }
+  .screen-body { overflow: visible; padding: 0; background: #fff; }
+  .card { border: 1px solid #ddd; background: #fff; color: #000; }
+}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ===== محتوا ===== -->
-  <div class="content">
+  <!-- ===== صفحه اصلی ===== -->
+  <div class="screen home active" id="screen-home">
+    <div class="home">
+      <div class="home-inner">
+        <div class="shutter-anim">
+          <div class="shutter-window"></div>
+          <div class="shutter-slats" id="slats"></div>
+          <div class="shutter-rail"></div>
+          <div class="shutter-motor"></div>
+        </div>
+        <h1>کرکره سازی <span class="gold">ایران زمین</span></h1>
+        <p class="subtitle">تولید · فروش · نصب · خدمات پس از فروش</p>
 
-    <!-- ===== تب فاکتور ===== -->
-    <div class="tab active" id="tab-invoice">
-      <div class="page-header">
-        <h1>فاکتور فروش</h1>
-        <p>ساخت فاکتور حرفه‌ای</p>
-        <div class="line"></div>
-      </div>
+        <div class="home-cards">
+          <a class="home-card c1" onclick="goTo('invoice')">
+            <div class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></div>
+            <div class="info">
+              <div class="t">فاکتور فروش</div>
+              <div class="d">ساخت فاکتور حرفه‌ای</div>
+            </div>
+            <div class="arrow">‹</div>
+          </a>
+          <a class="home-card c2" onclick="goTo('money')">
+            <div class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+            <div class="info">
+              <div class="t">حساب کتاب</div>
+              <div class="d">درآمد، هزینه، تقسیم سود</div>
+            </div>
+            <div class="arrow">‹</div>
+          </a>
+          <a class="home-card c3" onclick="goTo('calc')">
+            <div class="icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg></div>
+            <div class="info">
+              <div class="t">ماشین‌حساب</div>
+              <div class="d">محاسبه سریع و دقیق</div>
+            </div>
+            <div class="arrow">‹</div>
+          </a>
+        </div>
 
-      <div class="card">
-        <h2>اطلاعات فاکتور</h2>
-        <div class="grid-3">
-          <div>
-            <label>شماره</label>
-            <input id="invNum" placeholder="467">
+        <div class="home-footer">
+          <div class="contact">
+            <span>۰۹۱۰۵۸۵۸۰۳۸</span>
+            <span>·</span>
+            <span>صالحیه، نگارستان ۱۲</span>
           </div>
-          <div>
+          <div class="slogan">امنیت · آرامش · ماندگاری</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== صفحه فاکتور ===== -->
+  <div class="screen" id="screen-invoice">
+    <div class="screen-header">
+      <button class="back" onclick="goHome()">‹</button>
+      <div class="title">فاکتور فروش</div>
+      <div class="actions">
+        <button class="action-btn" onclick="clearInvoice()">پاک</button>
+      </div>
+    </div>
+    <div class="screen-body">
+      <div class="card">
+        <div class="card-title">اطلاعات فاکتور</div>
+        <div class="grid-3">
+          <div class="field">
+            <label>شماره</label>
+            <input id="invNum" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="467">
+          </div>
+          <div class="field">
             <label>تاریخ</label>
             <input id="invDate">
           </div>
-          <div>
+          <div class="field">
             <label>مشتری</label>
             <input id="customer" placeholder="نام مشتری">
           </div>
@@ -407,185 +749,218 @@ textarea{min-height:70px;resize:vertical;line-height:1.7}
       </div>
 
       <div class="card">
-        <h2>افزودن قلم</h2>
-        <div class="grid-3">
-          <div>
-            <label>شرح</label>
-            <input id="itemDesc" placeholder="تیغه کرکره">
-          </div>
-          <div>
+        <div class="card-title">افزودن قلم</div>
+        <div class="field">
+          <label>شرح</label>
+          <input id="itemDesc" placeholder="تیغه کرکره متوسط آلما">
+        </div>
+        <div class="grid-2">
+          <div class="field">
             <label>مقدار</label>
             <input id="itemQty" placeholder="6 متر">
           </div>
-          <div>
-            <label>مبلغ</label>
-            <input id="itemPrice" type="number" placeholder="22000">
+          <div class="field">
+            <label>مبلغ (تومان)</label>
+            <input id="itemPrice" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="22000">
           </div>
         </div>
-        <button class="btn btn-primary" style="margin-top:12px" onclick="addItem()">افزودن به لیست</button>
+        <button class="btn btn-primary" onclick="addItem()">افزودن به لیست</button>
       </div>
 
       <div class="card">
-        <h2>لیست اقلام</h2>
+        <div class="card-title">لیست اقلام</div>
         <ul class="items-list" id="itemsList">
           <li class="empty">هنوز قلمی اضافه نشده</li>
         </ul>
-        <div class="result-box" id="itemsTotal" style="display:none">
-          <span class="label">جمع کل</span>
-          <span class="value" id="itemsTotalVal">0</span>
-        </div>
       </div>
 
-      <div class="card">
-        <h2>پیش‌نمایش فاکتور</h2>
-        <div id="invoicePreview" style="background:#fff;color:#1a1d21;padding:14px;border-radius:10px;display:none">
-          <div style="text-align:center;border-bottom:2px solid #0f2942;padding-bottom:8px;margin-bottom:10px">
-            <div style="font-size:15px;font-weight:800;color:#0f2942">کرکره سازی <span style="color:#c9a961">ایران زمین</span></div>
-            <div style="font-size:9px;color:#6b7280;margin-top:2px">تولید | فروش | نصب | خدمات پس از فروش</div>
+      <div class="result highlight" id="itemsTotal" style="display:none">
+        <span class="lbl">جمع کل</span>
+        <span class="val" id="itemsTotalVal">0</span>
+      </div>
+
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-primary" onclick="makeInvoice()">پیش‌نمایش فاکتور</button>
+      </div>
+
+      <div id="invoicePreview" style="display:none;margin-top:20px">
+        <div class="card" style="background:#fff;color:#1a1d21">
+          <div style="text-align:center;border-bottom:2px solid #0f2942;padding-bottom:10px;margin-bottom:12px">
+            <div style="font-size:18px;font-weight:800;color:#0f2942">کرکره سازی <span style="color:#c9a961">ایران زمین</span></div>
+            <div style="font-size:10px;color:#6b7280;margin-top:3px">تولید | فروش | نصب | خدمات پس از فروش</div>
           </div>
-          <div style="background:#0f2942;color:#fff;text-align:center;padding:7px;border-radius:5px;font-size:12px;font-weight:800;margin-bottom:10px">فاکتور فروش و نصب کرکره برقی</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;padding:8px;background:#fafbfc;border-radius:5px;margin-bottom:10px;border:1px solid #e5e7eb;text-align:center;font-size:10px">
-            <div><div style="color:#6b7280;font-size:8px">مشتری</div><div style="font-weight:700;color:#0f2942" id="prevCustomer">—</div></div>
-            <div><div style="color:#6b7280;font-size:8px">تاریخ</div><div style="font-weight:700;color:#0f2942" id="prevDate">—</div></div>
-            <div><div style="color:#6b7280;font-size:8px">شماره</div><div style="font-weight:700;color:#0f2942" id="prevNum">—</div></div>
+          <div style="background:#0f2942;color:#fff;text-align:center;padding:9px;border-radius:6px;font-size:13px;font-weight:700;margin-bottom:12px">فاکتور فروش و نصب کرکره برقی</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:10px;background:#f5f5f7;border-radius:8px;margin-bottom:12px;text-align:center;font-size:11px">
+            <div><div style="color:#6b7280;font-size:9px;margin-bottom:2px">مشتری</div><div style="font-weight:700;color:#0f2942" id="prevCustomer">—</div></div>
+            <div><div style="color:#6b7280;font-size:9px;margin-bottom:2px">تاریخ</div><div style="font-weight:700;color:#0f2942" id="prevDate">—</div></div>
+            <div><div style="color:#6b7280;font-size:9px;margin-bottom:2px">شماره</div><div style="font-weight:700;color:#0f2942" id="prevNum">—</div></div>
           </div>
-          <table style="width:100%;border-collapse:collapse;font-size:10px" id="prevTable">
-            <thead><tr style="background:#0f2942;color:#fff"><th style="padding:5px;border:1px solid #0f2942">#</th><th style="padding:5px;border:1px solid #0f2942">شرح</th><th style="padding:5px;border:1px solid #0f2942">مقدار</th><th style="padding:5px;border:1px solid #0f2942">مبلغ</th></tr></thead>
+          <table style="width:100%;border-collapse:collapse;font-size:11px" id="prevTable">
+            <thead>
+              <tr style="background:#0f2942;color:#fff">
+                <th style="padding:7px 5px;border:1px solid #0f2942">#</th>
+                <th style="padding:7px 5px;border:1px solid #0f2942">شرح</th>
+                <th style="padding:7px 5px;border:1px solid #0f2942">مقدار</th>
+                <th style="padding:7px 5px;border:1px solid #0f2942">مبلغ</th>
+              </tr>
+            </thead>
             <tbody></tbody>
           </table>
-          <div style="display:flex;justify-content:space-between;background:#0f2942;color:#fff;padding:10px;border-radius:5px;margin-top:8px">
-            <span style="font-size:11px;font-weight:600">جمع کل:</span>
-            <span style="font-size:14px;font-weight:800;color:#c9a961;direction:ltr" id="prevTotal">0</span>
+          <div style="display:flex;justify-content:space-between;background:#0f2942;color:#fff;padding:12px;border-radius:8px;margin-top:10px">
+            <span style="font-size:12px;font-weight:600">جمع کل:</span>
+            <span style="font-size:16px;font-weight:800;color:#c9a961;direction:ltr" id="prevTotal">0</span>
           </div>
-          <div style="background:#f0f4f8;padding:8px;border-radius:5px;margin-top:6px;text-align:center;font-size:10px;color:#0f2942">
-            <div style="color:#6b7280;font-size:9px;margin-bottom:2px">مبلغ به حروف:</div>
+          <div style="background:#f0f4f8;padding:10px;border-radius:8px;margin-top:8px;text-align:center;font-size:11px;color:#0f2942">
+            <div style="color:#6b7280;font-size:10px;margin-bottom:3px">مبلغ به حروف:</div>
             <div style="font-weight:600" id="prevLetters">—</div>
           </div>
         </div>
         <div class="btn-row">
-          <button class="btn btn-secondary" onclick="clearInvoice()">پاک کردن</button>
-          <button class="btn btn-primary" onclick="makeInvoice()">ساخت فاکتور</button>
-        </div>
-        <div class="btn-row" id="printRow" style="display:none">
           <button class="btn btn-primary" onclick="window.print()">چاپ / ذخیره PDF</button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- ===== تب حساب کتاب ===== -->
-    <div class="tab" id="tab-money">
-      <div class="page-header">
-        <h1>حساب کتاب</h1>
-        <p>درآمد، هزینه، تقسیم سود</p>
-        <div class="line"></div>
-      </div>
-
-      <div class="sub-tabs">
-        <button class="active" onclick="switchSub('calc', this)">💰 درآمد و هزینه</button>
-        <button onclick="switchSub('split', this)">👥 تقسیم سود</button>
-        <button onclick="switchSub('settle', this)">⚖️ تسویه</button>
-      </div>
-
-      <!-- درآمد و هزینه -->
-      <div class="sub-content active" id="sub-calc">
-        <div class="card">
-          <h2>درآمد و هزینه</h2>
+  <!-- ===== صفحه حساب کتاب ===== -->
+  <div class="screen" id="screen-money">
+    <div class="screen-header">
+      <button class="back" onclick="goHome()">‹</button>
+      <div class="title">حساب کتاب</div>
+    </div>
+    <div class="screen-body">
+      <div class="card">
+        <div class="card-title">درآمد و هزینه</div>
+        <div class="field">
           <label>درآمد کل (تومان)</label>
-          <input id="income" type="number" placeholder="100000000" oninput="calcMoney()">
+          <input id="income" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="100000000" oninput="calcMoney()" inputmode="numeric">
+        </div>
+        <div class="field">
           <label>هزینه مواد و مصالح</label>
-          <input id="cost1" type="number" placeholder="0" oninput="calcMoney()">
+          <input id="cost1" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcMoney()" inputmode="numeric">
+        </div>
+        <div class="field">
           <label>هزینه کرایه و بنزین</label>
-          <input id="cost2" type="number" placeholder="0" oninput="calcMoney()">
+          <input id="cost2" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcMoney()" inputmode="numeric">
+        </div>
+        <div class="field">
           <label>دستمزد کارگر</label>
-          <input id="cost3" type="number" placeholder="0" oninput="calcMoney()">
+          <input id="cost3" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcMoney()" inputmode="numeric">
+        </div>
+        <div class="field">
           <label>سایر هزینه‌ها</label>
-          <input id="cost4" type="number" placeholder="0" oninput="calcMoney()">
-        </div>
-        <div class="result-box">
-          <span class="label">سود خالص</span>
-          <span class="value" id="profitVal">0</span>
+          <input id="cost4" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcMoney()" inputmode="numeric">
         </div>
       </div>
 
-      <!-- تقسیم سود -->
-      <div class="sub-content" id="sub-split">
-        <div class="card">
-          <h2>درصد سهم همکاران</h2>
-          <div class="grid-3">
-            <div>
-              <label>همکار ۱</label>
-              <input id="s1" type="number" value="33" oninput="calcMoney()">
-            </div>
-            <div>
-              <label>همکار ۲</label>
-              <input id="s2" type="number" value="33" oninput="calcMoney()">
-            </div>
-            <div>
-              <label>همکار ۳</label>
-              <input id="s3" type="number" value="34" oninput="calcMoney()">
-            </div>
-          </div>
-          <div class="alert" id="pctAlert">جمع درصدها باید ۱۰۰ باشه</div>
-        </div>
+      <div class="result highlight">
+        <span class="lbl">سود خالص</span>
+        <span class="val" id="profitVal">0</span>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="card-title">درصد سهم همکاران</div>
         <div class="grid-3">
-          <div class="card" style="text-align:center;padding:12px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">همکار ۱</div>
-            <div style="font-size:14px;font-weight:800;color:var(--gold);direction:ltr" id="share1">0</div>
+          <div class="field">
+            <label>همکار ۱</label>
+            <input id="s1" type="tel" inputmode="numeric" pattern="[0-9]*" value="33" oninput="calcMoney()" inputmode="numeric">
           </div>
-          <div class="card" style="text-align:center;padding:12px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">همکار ۲</div>
-            <div style="font-size:14px;font-weight:800;color:var(--gold);direction:ltr" id="share2">0</div>
+          <div class="field">
+            <label>همکار ۲</label>
+            <input id="s2" type="tel" inputmode="numeric" pattern="[0-9]*" value="33" oninput="calcMoney()" inputmode="numeric">
           </div>
-          <div class="card" style="text-align:center;padding:12px">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px">همکار ۳</div>
-            <div style="font-size:14px;font-weight:800;color:var(--gold);direction:ltr" id="share3">0</div>
+          <div class="field">
+            <label>همکار ۳</label>
+            <input id="s3" type="tel" inputmode="numeric" pattern="[0-9]*" value="34" oninput="calcMoney()" inputmode="numeric">
           </div>
+        </div>
+        <div class="alert" id="pctAlert">جمع درصدها باید ۱۰۰ باشه</div>
+      </div>
+
+      <div class="shares">
+        <div class="share-box">
+          <div class="name">همکار ۱</div>
+          <div class="amount" id="share1">0</div>
+          <div class="pct" id="pct1">۳۳٪</div>
+        </div>
+        <div class="share-box">
+          <div class="name">همکار ۲</div>
+          <div class="amount" id="share2">0</div>
+          <div class="pct" id="pct2">۳۳٪</div>
+        </div>
+        <div class="share-box">
+          <div class="name">همکار ۳</div>
+          <div class="amount" id="share3">0</div>
+          <div class="pct" id="pct3">۳۴٪</div>
         </div>
       </div>
 
-      <!-- تسویه -->
-      <div class="sub-content" id="sub-settle">
-        <div class="card">
-          <h2>تسویه ۳ همکار</h2>
+      <div class="card" style="margin-top:20px">
+        <div class="card-title">تسویه ۳ همکار</div>
+        <div class="field">
           <label>نام همکار ۱</label>
           <input id="n1" placeholder="علی">
-          <div class="grid-2">
-            <div><label>آورده</label><input id="p1a" type="number" placeholder="0" oninput="calcSettle()"></div>
-            <div><label>برداشته</label><input id="p1b" type="number" placeholder="0" oninput="calcSettle()"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>آورده</label>
+            <input id="p1a" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcSettle()" inputmode="numeric">
           </div>
-          <label style="margin-top:12px">نام همکار ۲</label>
+          <div class="field">
+            <label>برداشته</label>
+            <input id="p1b" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcSettle()" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:8px">
+          <label>نام همکار ۲</label>
           <input id="n2" placeholder="رضا">
-          <div class="grid-2">
-            <div><label>آورده</label><input id="p2a" type="number" placeholder="0" oninput="calcSettle()"></div>
-            <div><label>برداشته</label><input id="p2b" type="number" placeholder="0" oninput="calcSettle()"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>آورده</label>
+            <input id="p2a" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcSettle()" inputmode="numeric">
           </div>
-          <label style="margin-top:12px">نام همکار ۳</label>
+          <div class="field">
+            <label>برداشته</label>
+            <input id="p2b" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcSettle()" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:8px">
+          <label>نام همکار ۳</label>
           <input id="n3" placeholder="سارا">
-          <div class="grid-2">
-            <div><label>آورده</label><input id="p3a" type="number" placeholder="0" oninput="calcSettle()"></div>
-            <div><label>برداشته</label><input id="p3b" type="number" placeholder="0" oninput="calcSettle()"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>آورده</label>
+            <input id="p3a" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcSettle()" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label>برداشته</label>
+            <input id="p3b" type="tel" inputmode="numeric" pattern="[0-9]*" placeholder="0" oninput="calcSettle()" inputmode="numeric">
           </div>
         </div>
-        <div class="card">
-          <h2>نتیجه تسویه</h2>
-          <div id="settleResult"><div class="empty">اطلاعات رو پر کن</div></div>
-        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">نتیجه تسویه</div>
+        <div id="settleResult"><div class="empty">اطلاعات رو پر کن</div></div>
       </div>
     </div>
+  </div>
 
-    <!-- ===== تب ماشین‌حساب ===== -->
-    <div class="tab" id="tab-calc">
-      <div class="page-header">
-        <h1>ماشین‌حساب</h1>
-        <p>محاسبه سریع</p>
-        <div class="line"></div>
-      </div>
-
+  <!-- ===== صفحه ماشین‌حساب ===== -->
+  <div class="screen" id="screen-calc">
+    <div class="screen-header">
+      <button class="back" onclick="goHome()">‹</button>
+      <div class="title">ماشین‌حساب</div>
+    </div>
+    <div class="screen-body">
       <div class="calc-display">
         <div class="expr" id="calcExpr"></div>
         <div class="result" id="calcResult">0</div>
       </div>
-
       <div class="calc-btns">
         <button class="danger" onclick="cClr()">C</button>
         <button onclick="cBack()">⌫</button>
@@ -608,52 +983,39 @@ textarea{min-height:70px;resize:vertical;line-height:1.7}
         <button class="eq" onclick="cEq()">=</button>
       </div>
     </div>
-
-  </div>
-
-  <!-- ===== تب‌بار ===== -->
-  <div class="tabbar">
-    <button class="active" onclick="switchTab('invoice', this)">
-      <span class="ic">📄</span>
-      فاکتور
-    </button>
-    <button onclick="switchTab('money', this)">
-      <span class="ic">💰</span>
-      حساب کتاب
-    </button>
-    <button onclick="switchTab('calc', this)">
-      <span class="ic">🔢</span>
-      ماشین‌حساب
-    </button>
   </div>
 
 </div>
 <script>
-// ===== تب‌بار =====
-function switchTab(name, btn){
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tabbar button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  btn.classList.add('active');
-  document.querySelector('.content').scrollTop = 0;
+// ===== ناوبری =====
+function goTo(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
 }
-
-// ===== تب‌های داخلی =====
-function switchSub(name, btn){
-  document.querySelectorAll('.sub-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.sub-tabs button').forEach(b => b.classList.remove('active'));
-  document.getElementById('sub-' + name).classList.add('active');
-  btn.classList.add('active');
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-home').classList.add('active');
 }
 
 // ===== کمکی =====
 const $ = id => document.getElementById(id);
 const fa = n => (typeof n === 'number' ? n.toLocaleString('fa-IR') : n);
 
+// ===== ساخت نوارهای کرکره =====
+(function(){
+  const slats = $('slats');
+  if(!slats) return;
+  for(let i = 0; i < 12; i++){
+    const s = document.createElement('div');
+    s.className = 'slat';
+    slats.appendChild(s);
+  }
+})();
+
 // ===== فاکتور =====
 let items = JSON.parse(localStorage.getItem('invoiceItems') || '[]');
 const today = new Date().toLocaleDateString('fa-IR');
-$('invDate').value = today;
+if($('invDate')) $('invDate').value = today;
 
 function addItem(){
   const desc = $('itemDesc').value.trim();
@@ -680,6 +1042,7 @@ function removeItem(i){
 function renderItems(){
   const list = $('itemsList');
   const totalBox = $('itemsTotal');
+  if(!list) return;
   if(items.length === 0){
     list.innerHTML = '<li class="empty">هنوز قلمی اضافه نشده</li>';
     totalBox.style.display = 'none';
@@ -749,16 +1112,15 @@ function makeInvoice(){
   items.forEach((it, i) => {
     total += it.price;
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td style="padding:5px;border:1px solid #e5e7eb;text-align:center">' + fa(i+1) + '</td>'
-      + '<td style="padding:5px;border:1px solid #e5e7eb;text-align:right">' + it.desc + '</td>'
-      + '<td style="padding:5px;border:1px solid #e5e7eb;text-align:center">' + it.qty + '</td>'
-      + '<td style="padding:5px;border:1px solid #e5e7eb;text-align:left;direction:ltr">' + fa(it.price) + '</td>';
+    tr.innerHTML = '<td style="padding:7px 5px;border:1px solid #e5e7eb;text-align:center;color:#0f2942">' + fa(i+1) + '</td>'
+      + '<td style="padding:7px 5px;border:1px solid #e5e7eb;text-align:right;color:#0f2942">' + it.desc + '</td>'
+      + '<td style="padding:7px 5px;border:1px solid #e5e7eb;text-align:center;color:#0f2942">' + it.qty + '</td>'
+      + '<td style="padding:7px 5px;border:1px solid #e5e7eb;text-align:left;direction:ltr;color:#0f2942">' + fa(it.price) + '</td>';
     tbody.appendChild(tr);
   });
   $('prevTotal').textContent = fa(total) + ' تومان';
   $('prevLetters').textContent = numToWords(total) + ' تومان';
   $('invoicePreview').style.display = 'block';
-  $('printRow').style.display = 'flex';
   $('invoicePreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -769,7 +1131,6 @@ function clearInvoice(){
   $('customer').value = '';
   $('invNum').value = '';
   $('invoicePreview').style.display = 'none';
-  $('printRow').style.display = 'none';
   renderItems();
 }
 
@@ -790,15 +1151,18 @@ function calcMoney(){
   const sum = s1 + s2 + s3;
   const alertEl = $('pctAlert');
   if(sum === 100){
-    alertEl.className = 'alert green';
+    alertEl.className = 'alert ok';
     alertEl.textContent = 'جمع درصدها: ۱۰۰٪ ✓';
   } else {
-    alertEl.className = 'alert red';
+    alertEl.className = 'alert err';
     alertEl.textContent = 'جمع درصدها: ' + fa(sum) + '٪ (باید ۱۰۰ باشه)';
   }
   $('share1').textContent = fa(Math.round(profit * s1 / 100)) + ' ت';
   $('share2').textContent = fa(Math.round(profit * s2 / 100)) + ' ت';
   $('share3').textContent = fa(Math.round(profit * s3 / 100)) + ' ت';
+  $('pct1').textContent = fa(s1) + '٪';
+  $('pct2').textContent = fa(s2) + '٪';
+  $('pct3').textContent = fa(s3) + '٪';
 }
 
 function calcSettle(){
@@ -829,7 +1193,7 @@ function calcSettle(){
   if(lines.length === 0){ $('settleResult').innerHTML = '<div class="empty">همه تسویه‌ن</div>'; return; }
   let html = '';
   lines.forEach(l => {
-    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(22,163,74,0.08);border-radius:8px;margin-bottom:6px;font-size:12px">'
+    html += '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);border-radius:10px;margin-bottom:8px;font-size:13px">'
       + '<span style="color:#f87171;font-weight:700">' + l.from + '</span>'
       + '<span style="color:var(--muted)">←</span>'
       + '<span style="color:#86efac;font-weight:700">' + l.to + '</span>'
@@ -840,7 +1204,7 @@ function calcSettle(){
 }
 
 // ===== ماشین‌حساب =====
-let cCur = '0', cPrev = null, cOp = null, cExpr = '';
+let cCur = '0', cPrev = null, cOpV = null, cExpr = '';
 function cUpd(){ $('calcResult').textContent = cCur; $('calcExpr').textContent = cExpr; }
 function cNum(d){
   if(cCur === '0' && d !== '.') cCur = d;
@@ -849,36 +1213,30 @@ function cNum(d){
   cUpd();
 }
 function cOp(o){
-  if(cOp !== null && cPrev !== null) cEq();
+  if(cOpV !== null && cPrev !== null) cEq();
   cPrev = parseFloat(cCur);
-  cOp = o;
+  cOpV = o;
   cExpr = cCur + ' ' + o;
   cCur = '0';
   cUpd();
 }
 function cEq(){
-  if(cOp === null || cPrev === null) return;
+  if(cOpV === null || cPrev === null) return;
   const a = cPrev, b = parseFloat(cCur);
   let r = 0;
-  if(cOp === '+') r = a + b;
-  else if(cOp === '-') r = a - b;
-  else if(cOp === '×') r = a * b;
-  else if(cOp === '÷') r = b === 0 ? 'خطا' : a / b;
-  else if(cOp === '%') r = a * b / 100;
+  if(cOpV === '+') r = a + b;
+  else if(cOpV === '-') r = a - b;
+  else if(cOpV === '×') r = a * b;
+  else if(cOpV === '÷') r = b === 0 ? 'خطا' : a / b;
+  else if(cOpV === '%') r = a * b / 100;
   if(r === 'خطا') cCur = 'خطا';
   else cCur = String(Math.round(r * 1000000) / 1000000);
-  cExpr = cPrev + ' ' + cOp + ' ' + b + ' =';
-  cPrev = null; cOp = null;
+  cExpr = cPrev + ' ' + cOpV + ' ' + b + ' =';
+  cPrev = null; cOpV = null;
   cUpd();
 }
-function cClr(){ cCur = '0'; cPrev = null; cOp = null; cExpr = ''; cUpd(); }
+function cClr(){ cCur = '0'; cPrev = null; cOpV = null; cExpr = ''; cUpd(); }
 function cBack(){ if(cCur.length > 1) cCur = cCur.slice(0, -1); else cCur = '0'; cUpd(); }
-
-// ===== شروع =====
-renderItems();
-calcMoney();
-calcSettle();
-cUpd();
 
 // ===== ذخیره خودکار =====
 const savedFields = ['invNum','customer','income','cost1','cost2','cost3','cost4','s1','s2','s3','n1','n2','n3','p1a','p1b','p2a','p2b','p3a','p3b'];
@@ -891,6 +1249,12 @@ savedFields.forEach(id => {
     localStorage.setItem('field_' + id, el.value);
   });
 });
+
+// ===== شروع =====
+renderItems();
+calcMoney();
+calcSettle();
+cUpd();
 </script>
 </body>
 </html>

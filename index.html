@@ -596,55 +596,79 @@ function quickAddAll(){
   const text = document.getElementById('quickAdd').value.trim();
   if(!text){ alert('متنی وارد کن'); return; }
   
+  // تبدیل اعداد فارسی/عربی به انگلیسی
+  function toEn(s){
+    return s.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+            .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+  }
+  
   const lines = text.split('\n').filter(l => l.trim());
   let added = 0;
+  let failed = [];
   
   lines.forEach(line => {
-    // حذف خطوطی که "جمع" توش هست
+    // حذف خطوط "جمع"
     if(/جمع\s*کل|مجموع|total/i.test(line)) return;
+    
+    // تبدیل اعداد فارسی به انگلیسی
+    let lineEn = toEn(line);
     
     let desc, qty, price;
     
-    // حالت ۱: جداکننده | یا ، یا ,
-    let parts = line.split('|').map(p => p.trim()).filter(Boolean);
-    if(parts.length < 2) parts = line.split('،').map(p => p.trim()).filter(Boolean);
-    if(parts.length < 2) parts = line.split(',').map(p => p.trim()).filter(Boolean);
+    // اول: جداکننده |
+    let parts = lineEn.split('|').map(p => p.trim()).filter(Boolean);
+    if(parts.length < 2) parts = lineEn.split('،').map(p => p.trim()).filter(Boolean);
+    if(parts.length < 2) parts = lineEn.split(',').map(p => p.trim()).filter(Boolean);
     
     if(parts.length >= 3){
       desc = parts[0];
       qty = parts[1];
       price = parseFloat(parts[2].replace(/[^0-9]/g, '')) || 0;
     } else {
-      // حالت ۲: بدون جداکننده - آخرین عدد بزرگ = مبلغ
-      const nums = line.match(/[0-9][0-9,]*/g);
+      // حالت ۲: بدون جداکننده - بزرگ‌ترین عدد = مبلغ
+      const nums = lineEn.match(/[0-9][0-9,]*/g);
       if(nums && nums.length > 0){
-        // بزرگ‌ترین عدد = مبلغ
         let maxNum = 0, maxStr = '';
         nums.forEach(n => {
           const val = parseFloat(n.replace(/,/g, ''));
           if(val > maxNum){ maxNum = val; maxStr = n; }
         });
         price = maxNum;
-        desc = line.replace(maxStr, '').trim();
-        // حذف علائم اضافی
-        desc = desc.replace(/[|،,\-–—]+$/, '').trim();
         
-        // اگه داخل شرح (x متر) بود، به مقدار منتقل کن
-        const qtyMatch = desc.match(/\(([^)]+)\)/);
+        // پیدا کردن آخرین جای maxStr توی خط انگلیسی، حذفش کن
+        const idx = lineEn.lastIndexOf(maxStr);
+        let before = lineEn.substring(0, idx).trim();
+        
+        // حذف علائم اضافی از آخر
+        before = before.replace(/[|،,\-–—:]+$/, '').trim();
+        
+        // اگه داخل پرانتز متر/عدد بود، مقدار جدا کن
+        const qtyMatch = before.match(/\(([^)]+)\)\s*$/);
         if(qtyMatch){
-          qty = qtyMatch[1];
-          desc = desc.replace(/\([^)]+\)/, '').trim();
+          qty = qtyMatch[1].trim();
+          before = before.replace(/\([^)]+\)\s*$/, '').trim();
         } else {
           qty = '—';
         }
+        
+        desc = before;
       } else {
+        failed.push(line);
         return;
       }
     }
     
     if(desc && price > 0){
+      // اگه شرح فارسی بود، اصلش رو بردار (نه نسخه انگلیسی)
+      if(/[\u0600-\u06FF]/.test(line)){
+        // شرح اصلی رو از خط اصلی بردار
+        const originalIdx = line.indexOf(lineEn.split(desc)[0]);
+        // همین desc کافیه
+      }
       items.push({ desc: desc, qty: qty || '—', price: price });
       added++;
+    } else {
+      failed.push(line);
     }
   });
   
@@ -653,9 +677,9 @@ function quickAddAll(){
   renderItems();
   
   if(added > 0){
-    alert('✅ ' + added + ' قلم اضافه شد');
+    alert('✅ ' + added + ' قلم اضافه شد' + (failed.length ? '\n❌ ' + failed.length + ' خط خطا داشت' : ''));
   } else {
-    alert('❌ هیچ قلمی اضافه نشد. فرمت رو چک کن');
+    alert('❌ هیچ قلمی اضافه نشد.\n\nنمونه خط صحیح:\nتیغه کرکره (13 متر) 59,000,000');
   }
 }
 

@@ -600,41 +600,50 @@ function quickAddAll(){
   let added = 0;
   
   lines.forEach(line => {
-    // پشتیبانی از جداکننده‌های: | ، , -  و فاصله
-    let parts = line.split('|').map(p => p.trim());
-    if(parts.length < 2){
-      parts = line.split('،').map(p => p.trim());
-    }
-    if(parts.length < 2){
-      parts = line.split(',').map(p => p.trim());
-    }
+    // حذف خطوطی که "جمع" توش هست
+    if(/جمع\s*کل|مجموع|total/i.test(line)) return;
     
     let desc, qty, price;
+    
+    // حالت ۱: جداکننده | یا ، یا ,
+    let parts = line.split('|').map(p => p.trim()).filter(Boolean);
+    if(parts.length < 2) parts = line.split('،').map(p => p.trim()).filter(Boolean);
+    if(parts.length < 2) parts = line.split(',').map(p => p.trim()).filter(Boolean);
     
     if(parts.length >= 3){
       desc = parts[0];
       qty = parts[1];
       price = parseFloat(parts[2].replace(/[^0-9]/g, '')) || 0;
-    } else if(parts.length === 2){
-      desc = parts[0];
-      qty = '—';
-      price = parseFloat(parts[1].replace(/[^0-9]/g, '')) || 0;
     } else {
-      // یه خط، آخرین عدد = مبلغ
-      const nums = line.match(/[0-9,]+/g);
+      // حالت ۲: بدون جداکننده - آخرین عدد بزرگ = مبلغ
+      const nums = line.match(/[0-9][0-9,]*/g);
       if(nums && nums.length > 0){
-        const last = nums[nums.length - 1];
-        price = parseFloat(last.replace(/,/g, '')) || 0;
-        desc = line.replace(last, '').trim();
+        // بزرگ‌ترین عدد = مبلغ
+        let maxNum = 0, maxStr = '';
+        nums.forEach(n => {
+          const val = parseFloat(n.replace(/,/g, ''));
+          if(val > maxNum){ maxNum = val; maxStr = n; }
+        });
+        price = maxNum;
+        desc = line.replace(maxStr, '').trim();
+        // حذف علائم اضافی
+        desc = desc.replace(/[|،,\-–—]+$/, '').trim();
+        
+        // اگه داخل شرح (x متر) بود، به مقدار منتقل کن
+        const qtyMatch = desc.match(/\(([^)]+)\)/);
+        if(qtyMatch){
+          qty = qtyMatch[1];
+          desc = desc.replace(/\([^)]+\)/, '').trim();
+        } else {
+          qty = '—';
+        }
       } else {
-        desc = line;
-        price = 0;
+        return;
       }
-      qty = '—';
     }
     
     if(desc && price > 0){
-      items.push({ desc, qty: qty || '—', price });
+      items.push({ desc: desc, qty: qty || '—', price: price });
       added++;
     }
   });

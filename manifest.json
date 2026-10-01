@@ -1,7 +1,6 @@
 {
   "name": "کرکره سازی ایران زمین",
   "short_name": "کرکره ایران زمین",
-  "description": "فاکتور، حساب کتاب و ماشین‌حساب",
   "start_url": "/safar/index.html",
   "scope": "/safar/",
   "display": "standalone",
@@ -11,7 +10,7 @@
   "lang": "fa",
   "dir": "rtl",
   "icons": [
-    {"src": "/safar/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "/safar/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    {"src": "/safar/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/safar/icon-512.png", "sizes": "512x512", "type": "image/png"}
   ]
 }
